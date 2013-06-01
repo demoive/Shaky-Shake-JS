@@ -20,15 +20,15 @@
     }
 
     // Get the webcam's stream.
-    nav.getUserMedia({video: true}, startStream, function () {});
+    //nav.getUserMedia({video: true}, startStream, function () {});
+
+    // Ready! Let's start drawing.
+    requestAnimationFrame(draw);
   }
 
   function startStream(stream) {
     video.src = URL.createObjectURL(stream);
     video.play();
-
-    // Ready! Let's start drawing.
-    requestAnimationFrame(draw);
   }
 
   function draw() {
