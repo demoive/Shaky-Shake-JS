@@ -68,7 +68,8 @@
 
   //var c = 5;
 
-  update();
+  video.addEventListener('play', function () { update(); });
+  video.addEventListener('pause', function () { clearTimeout(timeOut); });
 
   // function initialize() {
   //  if (!AudioContext) {
@@ -138,10 +139,15 @@
   // }
 
   function update() {
+    //if (!video.paused || !video.ended);
     drawVideo();
     blend();
     //checkAreas();
-    timeOut = setTimeout(update, 1000/60);
+
+    // thought requestAnimationFrame() would be more efficient, but I think we
+    // it is called too often - more than what we need at 60fps 
+    timeOut = setTimeout(update, 1000 / 60);
+    //timeOut = requestAnimationFrame(update);
   }
 
   function drawVideo() {
@@ -149,18 +155,26 @@
   }
 
   function blend() {
-    var width = canvasSource.width;
-    var height = canvasSource.height;
-    // get webcam image data
-    var sourceData = contextSource.getImageData(0, 0, width, height);
+    var sourceData,
+      blendedData,
+      width = canvasSource.width,
+      height = canvasSource.height;
+
+    // get image data from the image drawn on the source canvas
+    sourceData = contextSource.getImageData(0, 0, width, height);
+
     // create an image if the previous image doesn’t exist
     if (!lastImageData) lastImageData = contextSource.getImageData(0, 0, width, height);
+
     // create a ImageData instance to receive the blended result
-    var blendedData = contextSource.createImageData(width, height);
+    blendedData = contextSource.createImageData(width, height);
+
     // blend the 2 images
     differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
+
     // draw the result in a canvas
     contextBlended.putImageData(blendedData, 0, 0);
+
     // store the current webcam image
     lastImageData = sourceData;
   }
@@ -188,17 +202,37 @@
   // }
 
   function differenceAccuracy(target, data1, data2) {
+    var i = 0,
+      pixels,
+      average1, average2, diff;
+
     if (data1.length != data2.length) return null;
-    var i = 0;
-    while (i < (data1.length * 0.25)) {
-      var average1 = (data1[4*i] + data1[4*i+1] + data1[4*i+2]) / 3;
-      var average2 = (data2[4*i] + data2[4*i+1] + data2[4*i+2]) / 3;
-      var diff = threshold(Math.abs(average1 - average2));
-      target[4*i] = diff;
-      target[4*i+1] = diff;
-      target[4*i+2] = diff;
-      target[4*i+3] = 0xFF;
-      ++i;
+
+    // ImageData contains 4 channels (rgba) per pixel.
+    //pixels = (data1.length / 4);
+    pixelData = data1.length;
+
+    // For each pixel data of the reference frame...
+    while (i < pixelData) {
+      // Gets the grayscale (achromatic) value of the pixel.
+      average1 = (data1[i] + data1[i + 1] + data1[i + 2]) / 3;
+      average2 = (data2[i] + data2[i + 1] + data2[i + 2]) / 3;
+
+      // Get the difference between current and previous reference frames.
+      diff = threshold(Math.abs(average1 - average2));
+
+      // Write the difference in luminosity to the blended canvas context.
+      // We write the same value to all color channels to show it in white since
+      // there's no noticeable performance difference if we only use one color.
+      // There was a slight performance hit if we use only the alpha channel so
+      // we set to fully opaque.
+      target[i] = diff;       // r
+      target[i + 1] = diff;   // g
+      target[i + 2] = diff;   // b
+      target[i + 3] = 255;    // a
+
+      // advance to the next pixel (set of rgba channels)
+      i = (i + 4);
     }
   }
 

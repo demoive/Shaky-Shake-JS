@@ -1,10 +1,13 @@
 (function (win, nav) {
-  "use strict";
+  'use strict';
 
   win.requestAnimationFrame = win.requestAnimationFrame ||
                               win.msRequestAnimationFrame ||
                               win.mozRequestAnimationFrame ||
-                              win.webkitRequestAnimationFrame;
+                              win.webkitRequestAnimationFrame ||
+                              function (callback){
+                                win.setTimeout(callback, 1000 / 60);
+                              };
 
   nav.getUserMedia = nav.getUserMedia ||
                      nav.oGetUserMedia ||
