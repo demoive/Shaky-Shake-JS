@@ -23,11 +23,11 @@
 
   var video = document.getElementById('video-src');
 
-  navigator.getUserMedia({video: true}, function (stream) {
-    video.src = URL.createObjectURL(stream);
-    //video.play();
-    update();
-  }, webcamError);
+  // navigator.getUserMedia({video: true}, function (stream) {
+  //   video.src = URL.createObjectURL(stream);
+  //   //video.play();
+  //   update();
+  // }, webcamError);
 
   // if (navigator.getUserMedia) {
   //   navigator.getUserMedia({audio: true, video: true}, function(stream) {
