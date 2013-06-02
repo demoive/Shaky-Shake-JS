@@ -17,9 +17,9 @@
   //  return;
   // }
 
-  var webcamError = function(e) {
-    alert('Webcam error!', e);
-  };
+  // var webcamError = function(e) {
+  //   alert('Webcam error!', e);
+  // };
 
   var video = document.getElementById('video-src');
 
@@ -63,10 +63,10 @@
   //var notes = [];
 
   // mirror video
-  contextSource.translate(canvasSource.width, 0);
-  contextSource.scale(-1, 1);
+  //contextSource.translate(canvasSource.width, 0);
+  //contextSource.scale(-1, 1);
 
-  var c = 5;
+  //var c = 5;
 
   update();
 
@@ -174,18 +174,18 @@
     return (value > 0x15) ? 0xFF : 0;
   }
 
-  function difference(target, data1, data2) {
-    // blend mode difference
-    if (data1.length != data2.length) return null;
-    var i = 0;
-    while (i < (data1.length * 0.25)) {
-      target[4*i] = data1[4*i] == 0 ? 0 : Math.abs(data1[4*i] - data2[4*i]);
-      target[4*i+1] = data1[4*i+1] == 0 ? 0 : Math.abs(data1[4*i+1] - data2[4*i+1]);
-      target[4*i+2] = data1[4*i+2] == 0 ? 0 : Math.abs(data1[4*i+2] - data2[4*i+2]);
-      target[4*i+3] = 0xFF;
-      ++i;
-    }
-  }
+  // function difference(target, data1, data2) {
+  //   // blend mode difference
+  //   if (data1.length != data2.length) return null;
+  //   var i = 0;
+  //   while (i < (data1.length * 0.25)) {
+  //     target[4*i] = data1[4*i] == 0 ? 0 : Math.abs(data1[4*i] - data2[4*i]);
+  //     target[4*i+1] = data1[4*i+1] == 0 ? 0 : Math.abs(data1[4*i+1] - data2[4*i+1]);
+  //     target[4*i+2] = data1[4*i+2] == 0 ? 0 : Math.abs(data1[4*i+2] - data2[4*i+2]);
+  //     target[4*i+3] = 0xFF;
+  //     ++i;
+  //   }
+  // }
 
   function differenceAccuracy(target, data1, data2) {
     if (data1.length != data2.length) return null;
