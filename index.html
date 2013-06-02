@@ -4,20 +4,21 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Motion detection in a video</title>
+    <title>Javascript motion detection in video</title>
     <style>
       video, canvas { float: left; margin: 10px; background: #eee; border: 1px solid #444; }
     </style>
-    <script src="shim.js"></script>
-    <script src="main.js"></script>
   </head>
 
-  <!-- http://timtaubert.de/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/ -->
-
   <body>
-    <video id="v" width="320" height="240" controls loop muted>
-      <source src="pigeons-10s_480.mov">
+    <video id="video-src" width="320" height="240" controls loop muted autoplay>
+      <!-- <source src="pigeons-10s_480.mov"></source> -->
     </video>
-    <canvas id="c" width="320" height="240"></canvas>
+    <canvas id="canvas-src" width="320" height="240"></canvas>
+    <canvas id="canvas-blended" width="320" height="240"></canvas>
+
+    <script src="shim.js"></script>
+    <script src="main.js"></script> <!-- http://timtaubert.de/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/ -->
+    <!-- <script src="main2.js"></script> --> <!-- http://www.adobe.com/devnet/html5/articles/javascript-motion-detection.html -->
   </body>
 </html>

@@ -6,13 +6,13 @@
 
   function initialize() {
     // The source video.
-    video = doc.getElementById("v");
+    video = doc.getElementById('video-src');
     width = video.width;
     height = video.height;
 
     // The target canvas.
-    var canvas = doc.getElementById("c");
-    context = canvas.getContext("2d");
+    var canvas = doc.getElementById('canvas-blended');
+    context = canvas.getContext('2d');
 
     // Prepare buffers to store lightness data.
     for (var i = 0; i < 2; i++) {
@@ -20,15 +20,15 @@
     }
 
     // Get the webcam's stream.
-    //nav.getUserMedia({video: true}, startStream, function () {});
-
-    // Ready! Let's start drawing.
-    requestAnimationFrame(draw);
+    nav.getUserMedia({video: true}, startStream, function () {});
   }
 
   function startStream(stream) {
     video.src = URL.createObjectURL(stream);
     video.play();
+
+    // Ready! Let's start drawing.
+    requestAnimationFrame(draw);
   }
 
   function draw() {
@@ -83,5 +83,5 @@
     return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
   }
 
-  addEventListener("DOMContentLoaded", initialize);
+  addEventListener('DOMContentLoaded', initialize);
 })(document, navigator);

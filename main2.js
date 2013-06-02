@@ -21,7 +21,7 @@
     alert('Webcam error!', e);
   };
 
-  var video = document.getElementById('webcam');
+  var video = document.getElementById('video-src');
 
   navigator.getUserMedia({video: true}, function (stream) {
     video.src = URL.createObjectURL(stream);
@@ -49,10 +49,10 @@
   //  null
   // );
 
-  var notesPos = [0, 82, 159, 238, 313, 390, 468, 544];
+  // var notesPos = [0, 82, 159, 238, 313, 390, 468, 544];
 
   var timeOut, lastImageData;
-  var canvasSource = document.getElementById('canvas-source');
+  var canvasSource = document.getElementById('canvas-src');
   var canvasBlended = document.getElementById('canvas-blended');
 
   var contextSource = canvasSource.getContext('2d');
@@ -138,7 +138,6 @@
   // }
 
   function update() {
-    console.log('hi');
     drawVideo();
     blend();
     //checkAreas();
