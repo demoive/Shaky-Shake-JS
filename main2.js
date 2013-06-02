@@ -1,22 +1,4 @@
 (function() {
-
-  // function hasGetUserMedia() {
-  //  // Note: Opera builds are unprefixed.
-  //  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-  //    navigator.mozGetUserMedia || navigator.msGetUserMedia);
-  // }
-
-  // if (hasGetUserMedia()) {
-  //  $("#info").hide();
-  //  $("#message").show();
-  // } else {
-  //  $("#info").show();
-  //  $("#message").hide();
-  //  $("#video-demo").show();
-  //  $("#video-demo")[0].play();
-  //  return;
-  // }
-
   // var webcamError = function(e) {
   //   alert('Webcam error!', e);
   // };
@@ -43,12 +25,6 @@
   //   //video.src = 'somevideo.webm'; // fallback.
   // }
 
-  // var AudioContext = (
-  //  window.AudioContext ||
-  //  window.webkitAudioContext ||
-  //  null
-  // );
-
   // var notesPos = [0, 82, 159, 238, 313, 390, 468, 544];
 
   var movementThreshold = 30;
@@ -59,87 +35,14 @@
   var contextSource = canvasSource.getContext('2d');
   var contextBlended = canvasBlended.getContext('2d');
 
-  document.getElementById('movement-threshold').addEventListener('change', function () { movementThreshold = this.value; });
-
-  //var soundContext;
-  //var bufferLoader;
-  //var notes = [];
+  //document.getElementById('movement-threshold').addEventListener('change', function () { movementThreshold = this.value; });
 
   // mirror video
   //contextSource.translate(canvasSource.width, 0);
   //contextSource.scale(-1, 1);
 
-  //var c = 5;
-
   video.addEventListener('play', function () { update(); });
   video.addEventListener('pause', function () { clearTimeout(timeOut); });
-
-  // function initialize() {
-  //  if (!AudioContext) {
-  //    alert("AudioContext not supported!");
-  //  }
-  //  else {
-  //    loadSounds();
-  //  }
-  // }
-
-  // function loadSounds() {
-  //  soundContext = new AudioContext();
-  //  bufferLoader = new BufferLoader(soundContext,
-  //    [
-  //      'sounds/note1.mp3',
-  //      'sounds/note2.mp3',
-  //      'sounds/note3.mp3',
-  //      'sounds/note4.mp3',
-  //      'sounds/note5.mp3',
-  //      'sounds/note6.mp3',
-  //      'sounds/note7.mp3',
-  //      'sounds/note8.mp3'
-  //    ],
-  //    finishedLoading
-  //  );
-  //  bufferLoader.load();
-  // }
-
-  // function finishedLoading(bufferList) {
-  //  for (var i=0; i<8; i++) {
-  //    var source = soundContext.createBufferSource();
-  //    source.buffer = bufferList[i];
-  //    source.connect(soundContext.destination);
-  //    var note = {
-  //      note: source,
-  //      ready: true,
-  //      visual: document.getElementById('note' + i)
-  //    };
-  //    note.area = {x:notesPos[i], y:0, width:note.visual.width, height:100};
-  //    notes.push(note);
-  //  }
-  //  start();
-  // }
-
-  // function playSound(obj) {
-  //  if (!obj.ready) return;
-  //  var source = soundContext.createBufferSource();
-  //  source.buffer = obj.note.buffer;
-  //  source.connect(soundContext.destination);
-  //  source.noteOn(0);
-  //  obj.ready = false;
-  //  // throttle the note
-  //  setTimeout(setNoteReady, 400, obj);
-  // }
-
-  // function setNoteReady(obj) {
-  //  obj.ready = true;
-  // }
-
-  // function start() {
-  //  $(canvasSource).show();
-  //  $(canvasBlended).show();
-  //  $("#xylo").show();
-  //  $("#message").hide();
-  //  $("#description").show();
-  //  update();
-  // }
 
   function update() {
     //if (!video.paused || !video.ended);
@@ -181,11 +84,6 @@
     // store the current webcam image
     lastImageData = sourceData;
   }
-
-  // function fastAbs(value) {
-  //  // funky bitwise, equal Math.abs
-  //  return (value ^ (value >> 31)) - (value >> 31);
-  // }
 
   function threshold(value) {
     return (value > movementThreshold) ? 255 : 0;
