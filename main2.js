@@ -51,12 +51,15 @@
 
   // var notesPos = [0, 82, 159, 238, 313, 390, 468, 544];
 
+  var movementThreshold = 30;
   var timeOut, lastImageData;
   var canvasSource = document.getElementById('canvas-src');
   var canvasBlended = document.getElementById('canvas-blended');
 
   var contextSource = canvasSource.getContext('2d');
   var contextBlended = canvasBlended.getContext('2d');
+
+  document.getElementById('movement-threshold').addEventListener('change', function () { movementThreshold = this.value; });
 
   //var soundContext;
   //var bufferLoader;
@@ -185,7 +188,7 @@
   // }
 
   function threshold(value) {
-    return (value > 0x15) ? 0xFF : 0;
+    return (value > movementThreshold) ? 255 : 0;
   }
 
   // function difference(target, data1, data2) {
@@ -215,8 +218,8 @@
     // For each pixel data of the reference frame...
     while (i < pixelData) {
       // Gets the grayscale (achromatic) value of the pixel.
-      average1 = (data1[i] + data1[i + 1] + data1[i + 2]) / 3;
-      average2 = (data2[i] + data2[i + 1] + data2[i + 2]) / 3;
+      average1 = luma(data1[i], data1[i + 1], data1[i + 2]);
+      average2 = luma(data2[i], data2[i + 1], data2[i + 2]);
 
       // Get the difference between current and previous reference frames.
       diff = threshold(Math.abs(average1 - average2));
@@ -234,6 +237,14 @@
       // advance to the next pixel (set of rgba channels)
       i = (i + 4);
     }
+  }
+
+  // Returns the luma (grayscale) value of an rgb pixel.
+  function luma(r, g, b) {
+    return (r + g + b) / 3;
+    //return (0.3 * r) + (0.59 * g) + (0.11 * b);
+    //return (r+r+r + g+g+g+g+g+g + b) / 10;
+    //return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
   }
 
   // function checkAreas() {
