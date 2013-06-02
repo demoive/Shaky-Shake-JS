@@ -1,15 +1,23 @@
 (function() {
-  // var webcamError = function(e) {
-  //   alert('Webcam error!', e);
-  // };
+
+// count number of white pixels in current frame (compared to ref frame)
+// move current frame 1px in each direction
+// if more white pixels in either direction, translate move 1px in opposite direction
+// should save origin and add/sub to that value when translating (via CSS)
+
 
   var video = document.getElementById('video-src');
 
-  // navigator.getUserMedia({video: true}, function (stream) {
-  //   video.src = URL.createObjectURL(stream);
-  //   //video.play();
-  //   update();
-  // }, webcamError);
+  //*
+  var webcamError = function(e) {
+    alert('Webcam error!', e);
+  };
+
+  navigator.getUserMedia({video: true}, function (stream) {
+    video.src = URL.createObjectURL(stream);
+    //video.play();
+    update();
+  }, webcamError);
 
   // if (navigator.getUserMedia) {
   //   navigator.getUserMedia({audio: true, video: true}, function(stream) {
@@ -24,18 +32,22 @@
   // } else {
   //   //video.src = 'somevideo.webm'; // fallback.
   // }
+  //*/
 
   // var notesPos = [0, 82, 159, 238, 313, 390, 468, 544];
 
-  var movementThreshold = 30;
-  var timeOut, lastImageData;
+  var diffThreshold = 30; // diff between 2 frames' luma to be considered as movement
+  var movementThreshold = 0.1; // number of "movement" pixels to be considered camera shake (opposed to subject movement)
+  var ox = 0, oy = 0;
+
+  var timeOut, prevFrameImageData;
   var canvasSource = document.getElementById('canvas-src');
   var canvasBlended = document.getElementById('canvas-blended');
 
   var contextSource = canvasSource.getContext('2d');
   var contextBlended = canvasBlended.getContext('2d');
 
-  //document.getElementById('movement-threshold').addEventListener('change', function () { movementThreshold = this.value; });
+  //document.getElementById('diff-threshold').addEventListener('change', function () { diffThreshold = this.value; });
 
   // mirror video
   //contextSource.translate(canvasSource.width, 0);
@@ -52,8 +64,8 @@
 
     // thought requestAnimationFrame() would be more efficient, but I think we
     // it is called too often - more than what we need at 60fps 
-    timeOut = setTimeout(update, 1000 / 60);
-    //timeOut = requestAnimationFrame(update);
+    //timeOut = setTimeout(update, 1000 / 60);
+    timeOut = requestAnimationFrame(update);
   }
 
   function drawVideo() {
@@ -61,32 +73,80 @@
   }
 
   function blend() {
-    var sourceData,
-      blendedData,
+    var diffPixels,
+      currentFrameImageData,
+      blendedData, blendedData2,
       width = canvasSource.width,
-      height = canvasSource.height;
+      height = canvasSource.height,
+      area = (width * height);
 
-    // get image data from the image drawn on the source canvas
-    sourceData = contextSource.getImageData(0, 0, width, height);
+    // Get image data from the image drawn on the source canvas.
+    currentFrameImageData = contextSource.getImageData(0, 0, width, height);
 
-    // create an image if the previous image doesn’t exist
-    if (!lastImageData) lastImageData = contextSource.getImageData(0, 0, width, height);
+    // Create an image if the previous image doesn’t exist.
+    if (!prevFrameImageData) prevFrameImageData = currentFrameImageData;
 
-    // create a ImageData instance to receive the blended result
+    // Create a ImageData instance to receive the blended result.
     blendedData = contextSource.createImageData(width, height);
 
     // blend the 2 images
-    differenceAccuracy(blendedData.data, sourceData.data, lastImageData.data);
+    diffPixels = differenceAccuracy(blendedData.data, currentFrameImageData.data, prevFrameImageData.data);
 
-    // draw the result in a canvas
+//shiftContext(contextSource, -1, 0); 
+    // check if greater than thresholdd
+    if ((diffPixels / area) > movementThreshold) {
+      // shift cur frame left
+      //contextSource.translate(-1, 0);
+      shiftContext(contextSource, -1, 0);
+      shiftedFrameData = contextSource.getImageData(0, 0, width, height);
+
+
+      movementWhitePx = differenceAccuracy(null, shiftedFrameData.data, prevFrameImageData.data);
+      //movementWhitePx -= height; // (to make up for the 1px tall gap from the shift)
+
+      //console.log(diffPixels, movementWhitePx);
+
+      whitePxPercentage = movementWhitePx / (area - height);
+      blendedPercentage = diffPixels / area;
+
+      //console.log(whitePxPercentage, blendedPercentage);
+
+      //contextSource.translate(1, 0);
+      //shiftContext(contextSource, 1, 0);
+
+      if (whitePxPercentage < blendedPercentage) {
+        ox -= 1;
+      } else if (whitePxPercentage > blendedPercentage) {
+        ox += 1;
+        //console.log('translate right');
+      } else { }
+        console.log(ox);
+
+      canvasSource.style.webkitTransform = 'translate(' + ox * 5 + 'px, ' + oy * 5 + 'px)';
+      // compare with blended (probably have to compare percentage diff)
+      // if < diffPixels, translate left, else right
+      // repeat for up      
+    }
+
+
+    // Draw the diff result on to the canvas.
     contextBlended.putImageData(blendedData, 0, 0);
 
     // store the current webcam image
-    lastImageData = sourceData;
+    prevFrameImageData = currentFrameImageData;
+  }
+
+  function shiftContext(ctx, dx, dy) {
+    // shift everything to the left:
+    var imageData = ctx.getImageData(-dx, -dy, ctx.canvas.width + dx, ctx.canvas.height + dy);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+    // now clear the right-most pixels:
+    //ctx.clearRect(ctx.canvas.width + dx, 0, 1, ctx.canvas.height);
   }
 
   function threshold(value) {
-    return (value > movementThreshold) ? 255 : 0;
+    return (value > diffThreshold) ? 255 : 0;
   }
 
   // function difference(target, data1, data2) {
@@ -105,6 +165,7 @@
   function differenceAccuracy(target, data1, data2) {
     var i = 0,
       pixels,
+      pixelsMoved = 0,
       average1, average2, diff;
 
     if (data1.length != data2.length) return null;
@@ -122,19 +183,25 @@
       // Get the difference between current and previous reference frames.
       diff = threshold(Math.abs(average1 - average2));
 
+      pixelsMoved = pixelsMoved + (diff ? 1 : 0);
+
       // Write the difference in luminosity to the blended canvas context.
       // We write the same value to all color channels to show it in white since
       // there's no noticeable performance difference if we only use one color.
       // There was a slight performance hit if we use only the alpha channel so
       // we set to fully opaque.
-      target[i] = diff;       // r
-      target[i + 1] = diff;   // g
-      target[i + 2] = diff;   // b
-      target[i + 3] = 255;    // a
+      if (target) {
+        target[i] = diff;       // r
+        target[i + 1] = diff;   // g
+        target[i + 2] = diff;   // b
+        target[i + 3] = 255;    // a
+      }
 
       // advance to the next pixel (set of rgba channels)
       i = (i + 4);
     }
+  
+    return pixelsMoved;
   }
 
   // Returns the luma (grayscale) value of an rgb pixel.
