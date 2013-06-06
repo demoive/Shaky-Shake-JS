@@ -7,7 +7,14 @@
     <title>Javascript motion detection in video</title>
     <style>
       video, canvas { float: left; margin: 10px; background: #eee; border: 1px solid #444; }
+      #movement-gauge { float: left; margin: 10px; }
+      /*#canvas-src, #canvas-diff { display: none; }*/
     </style>
+
+    <script src="//www.google.com/jsapi"></script>
+    <script>
+      google.load('visualization', '1', {packages: ['gauge']});
+    </script>
   </head>
 
   <body>
@@ -16,14 +23,17 @@
       <!-- <source src="pigeons-10s_480.mov"></source> -->
     </video>
     <canvas id="canvas-src" width="320" height="240"></canvas>
-    <canvas id="canvas-blended" width="320" height="240"></canvas>
+    <canvas id="canvas-diff" width="320" height="240"></canvas>
+    <div id="movement-gauge">
 
     <script src="shim.js"></script>
     <!--<script src="main1.js"></script> --> <!-- http://timtaubert.de/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/ -->
     <script src="main2.js"></script> <!-- http://www.adobe.com/devnet/html5/articles/javascript-motion-detection.html -->
+    <script src="gauge.js"></script>
     <!-- https://developer.mozilla.org/en-US/docs/HTML/Manipulating_video_using_canvas -->
     <!-- http://www.soundstep.com/blog/2012/03/19/javascript-motion-tracking/ -->
     <!-- http://codeazur.com.br/stuff/motiontracking/ -->
     <!-- http://gannon.tv/edge_demos/motiontracking/ -->
+    <!-- http://www.videocopilot.net/tutorial/stabilize_shaky_footage/ -->
   </body>
 </html>
