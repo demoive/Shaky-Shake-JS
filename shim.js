@@ -6,7 +6,7 @@
                               win.mozRequestAnimationFrame ||
                               win.webkitRequestAnimationFrame ||
                               function (callback){
-                                win.setTimeout(callback, 1000 / 60);
+                                return win.setTimeout(callback, 1000 / 60);
                               };
 
   nav.getUserMedia = nav.getUserMedia ||
@@ -14,14 +14,6 @@
                      nav.msGetUserMedia ||
                      nav.mozGetUserMedia ||
                      nav.webkitGetUserMedia;
-
-  // Fallback for browsers that don't provide
-  // the requestAnimationFrame API (e.g. Opera).
-  if (!win.requestAnimationFrame) {
-    win.requestAnimationFrame = function (callback) {
-      setTimeout(callback, 0);
-    };
-  }
 
   // Fallback for browsers that don't provide
   // the URL.createObjectURL API (e.g. Opera).
