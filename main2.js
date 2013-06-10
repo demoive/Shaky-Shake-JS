@@ -2,7 +2,7 @@
   var DIFF_THRESHOLD = 10, // diff between 2 frames' luma to be considered as movement (a.k.a. sensitivity)
     MOVEMENT_THRESHOLD = 0.02, // number of "movement" pixels to be considered camera shake (opposed to subject movement)
     ox = 0, oy = 0,
-    timeOut, prevFrameImageData,
+    frameLoopTimeout, prevFrameImageData,
 
     video = document.getElementById('video-src'),
     srcCanvas = document.getElementById('canvas-src'),
@@ -33,8 +33,9 @@
   //srcCtx.translate(srcCanvas.width, 0);
   //srcCtx.scale(-1, 1);
 
+  video.addEventListener('canplay', function () { video.play(); });
   video.addEventListener('play', function () { frameLoop(); });
-  video.addEventListener('pause', function () { clearTimeout(timeOut); });
+  video.addEventListener('pause', function () { clearTimeout(frameLoopTimeout); });
 
   function frameLoop() {
     //if (!video.paused || !video.ended);
@@ -45,10 +46,9 @@
 
     // thought requestAnimationFrame() would be more efficient, but I think we
     // it is called too often - 60fps is more than what we need
-    //timeOut = requestAnimationFrame(frameLoop);
-    timeOut = setTimeout(frameLoop, 1000 / 60);
+    //frameLoopTimeout = requestAnimationFrame(frameLoop);
+    frameLoopTimeout = setTimeout(frameLoop, 1000 / 60);
   }
-
 
   function blend() {
     var diff,
@@ -176,7 +176,7 @@
       diffImageData.data[i + 2] = diffPixel;   // b
       diffImageData.data[i + 3] = 255;         // a
 
-      // advance to the next pixel (a set of rgba channels)
+      // Advance to the next pixel (a set of rgba channels).
       i = (i + 4);
     }
 
