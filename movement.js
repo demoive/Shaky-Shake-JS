@@ -6,21 +6,24 @@
 
     srcCtx, diffCtx,
 
-    canvasWidth = 320, canvasHeight = 240,
-    canvasArea = (canvasWidth * canvasHeight),
-
+    // HTML5 video element that is playing the raw video.
     video = document.getElementById('video-src'),
 
     // Used to draw each video frame on so that we can process it.
     srcCanvas = document.createElement('canvas'),
 
     // Can be used to draw the diff between two frames to visualize what is happening.
-    diffCanvas = document.createElement('canvas');
+    diffCanvas = document.createElement('canvas'),
+
+    canvasWidth = video.width, canvasHeight = video.height,
+    canvasArea = (canvasWidth * canvasHeight);
 
   srcCanvas.width = canvasWidth;
   srcCanvas.height = canvasHeight;
   diffCanvas.width = canvasWidth;
   diffCanvas.height = canvasHeight;
+
+  // Optionally place the canvas into the DOM to be able to visualize.
   document.body.appendChild(diffCanvas);
 
   srcCtx = srcCanvas.getContext('2d');
