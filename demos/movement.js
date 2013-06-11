@@ -32,12 +32,13 @@
   if (navigator.getUserMedia) {
     navigator.getUserMedia({video: true}, function (stream) {
       video.src = URL.createObjectURL(stream);
+      //video.playbackRate = .5;
       //video.play();
     }, function (e) {
       alert('Webcam error.', e);
     });
   } else {
-    video.src = 'pigeons-10s_480.mov'; // fallback.
+    video.src = '../pigeons-10s_480.mov'; // fallback.
   }
 
   document.getElementById('diff-threshold').addEventListener('change', function () {
@@ -49,8 +50,8 @@
   });
 
   // Flip the canvas to effectively mirror the video (for webcam).
-  srcCtx.translate(srcCanvas.width, 0);
-  srcCtx.scale(-1, 1);
+  //srcCtx.translate(srcCanvas.width, 0);
+  //srcCtx.scale(-1, 1);
 
   video.addEventListener('canplay', function () { video.play(); });
   video.addEventListener('play', function () { frameLoop(); });
@@ -85,10 +86,13 @@
     // Draw the diff result on to the canvas.
     diffCtx.putImageData(diffImageData, 0, 0);
 
-    // thought requestAnimationFrame() would be more efficient, but I think we
-    // it is called too often - 60fps is more than what we need
+    // requestAnimationFrame() is more efficient, however, since a webcam stream
+    // plays at much lower than 60fps and we only need to capture individual frames
+    // we would only need at most the same frame rate as the webcam stream; plus,
+    // calling it more often than there are frames produces a "blink" effect
+    // within the compared frames
     //frameLoopTimeout = requestAnimationFrame(frameLoop);
-    frameLoopTimeout = setTimeout(frameLoop, 1000 / 40);
+    frameLoopTimeout = setTimeout(frameLoop, 1000 / 30);
 
     return frameLoopTimeout;
   }
