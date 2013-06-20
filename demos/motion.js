@@ -5,6 +5,8 @@
     frameLoopTimeout, prevFrameImageData,
 
     srcCtx, diffCtx,
+shiftCtx,
+tempCtx,
 
     // HTML5 video element that is playing the raw video.
     video = document.getElementById('video-src'),
@@ -15,6 +17,7 @@
     // Can be used to draw the diff between two frames to visualize what is happening.
     diffCanvas = document.createElement('canvas'),
 shiftedCanvas = document.createElement('canvas'),
+tempCanvas = document.createElement('canvas'),
 
     canvasWidth = video.width, canvasHeight = video.height,
     canvasArea = (canvasWidth * canvasHeight);
@@ -23,26 +26,31 @@ shiftedCanvas = document.createElement('canvas'),
   srcCanvas.height = canvasHeight;
   diffCanvas.width = canvasWidth;
   diffCanvas.height = canvasHeight;
-shiftedCanvas.width = canvasWidth;
+shiftedCanvas.width = canvasWidth - 3;
 shiftedCanvas.height = canvasHeight;
+tempCanvas.width = canvasWidth - 3;
+tempCanvas.height = canvasHeight;
+
 
   // Optionally place the canvas into the DOM to be able to visualize.
-  document.body.appendChild(diffCanvas);
+  //document.body.appendChild(diffCanvas);
 document.body.appendChild(shiftedCanvas);
 
   srcCtx = srcCanvas.getContext('2d');
   diffCtx = diffCanvas.getContext('2d');
 shiftCtx = shiftedCanvas.getContext('2d');
+tempCtx = shiftedCanvas.getContext('2d');
 
   if (navigator.getUserMedia) {
     navigator.getUserMedia({video: true}, function (stream) {
       video.src = URL.createObjectURL(stream);
+      //video.playbackRate = .5;
       //video.play();
     }, function (e) {
       alert('Webcam error.', e);
     });
   } else {
-    video.src = 'pigeons-10s_480.mov'; // fallback.
+    video.src = '../pigeons-10s_480.mov'; // fallback.
   }
 
   document.getElementById('diff-threshold').addEventListener('change', function () {
@@ -54,8 +62,8 @@ shiftCtx = shiftedCanvas.getContext('2d');
   });
 
   // Flip the canvas to effectively mirror the video (for webcam).
-  srcCtx.translate(srcCanvas.width, 0);
-  srcCtx.scale(-1, 1);
+  //srcCtx.translate(srcCanvas.width, 0);
+  //srcCtx.scale(-1, 1);
 
   video.addEventListener('canplay', function () { video.play(); });
   video.addEventListener('play', function () { frameLoop(); });
@@ -69,6 +77,7 @@ shiftCtx = shiftedCanvas.getContext('2d');
    */
   function frameLoop() {
     var srcFrameImageData,
+      movementPxCount,
       diffImageData = srcCtx.createImageData(canvasWidth, canvasHeight);
 
     // Draws the image data from the video source on to a canvas context.
@@ -76,11 +85,14 @@ shiftCtx = shiftedCanvas.getContext('2d');
 
     // Get image data from the image drawn on the source canvas.
     srcFrameImageData = srcCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+
   // Effectively shifts the src left and compares to the previous frame.
-  var shiftedRef = srcCtx.getImageData(0, 0, canvasWidth - 3, canvasHeight);
   var shiftedFrameImageData = srcCtx.getImageData(3, 0, canvasWidth - 3, canvasHeight);
 
-  var shiftedRefDiff = srcCtx.createImageData(canvasWidth - 3, canvasHeight);
+// I THINK THE LAST ARGUMENT OF THE COMPAREFRAMES() BELOW NEEDS TO BE THE prevFrameImageData 
+// INFORMATION (MINUS 3 PIXELS OF COURSE). FIND A WAY TO "CROP" THIS
+
+  //var shiftedRefDiff = srcCtx.createImageData(canvasWidth - 3, canvasHeight);
   var diffShiftedImageData = srcCtx.createImageData(canvasWidth - 3, canvasHeight);
 
     // Create an image if the previous image doesn’t exist (1st iteration).
@@ -88,21 +100,24 @@ shiftCtx = shiftedCanvas.getContext('2d');
       prevFrameImageData = srcFrameImageData;
     }
 
-    var movementPxCount = compareFrames(diffImageData, srcFrameImageData, prevFrameImageData);
+    movementPxCount = compareFrames(diffImageData, srcFrameImageData, prevFrameImageData);
 
-  var motionPxCount = compareFrames(diffShiftedImageData, shiftedFrameImageData, shiftedRefDiff);
+//maybe use a temp ctx instead of shiftCtx?
+tempCtx.putImageData(prevFrameImageData, 0, 0);
+var shiftedPrevFrameImageData = tempCtx.getImageData(0, 0, canvasWidth - 3, canvasHeight);
+
+  var motionPxCount = compareFrames(diffShiftedImageData, shiftedFrameImageData, shiftedPrevFrameImageData);
   //var motionRefPxCount = compareFrames(shiftedRefDiff, shiftedFrameImageData, prevFrameImageData);
   //detectMotion();
 
-
   var shiftedDiffPercentage = motionPxCount / (canvasArea - (3*canvasHeight));
   var diffPercentage = movementPxCount / canvasArea;
-console.log(diffPercentage, Math.abs(1 - shiftedDiffPercentage));
+//console.log(diffPercentage, Math.abs(1 - shiftedDiffPercentage));
 
     // Only used for the movement gauge.
-    if (movementPxCount > MOVEMENT_THRESHOLD) {
-      gaugeVal = Math.round((movementPxCount / canvasArea) * 100);
-    }
+    //if (movementPxCount > MOVEMENT_THRESHOLD) {
+    //  gaugeVal = Math.round((movementPxCount / canvasArea) * 100);
+    //}
 
     // Store the current frame's image data for the next iteration.
     prevFrameImageData = srcFrameImageData;
@@ -110,10 +125,14 @@ console.log(diffPercentage, Math.abs(1 - shiftedDiffPercentage));
     // Draw the diff result on to the canvas.
     diffCtx.putImageData(diffImageData, 0, 0);
 shiftCtx.putImageData(diffShiftedImageData, 0, 0);
-    // thought requestAnimationFrame() would be more efficient, but I think we
-    // it is called too often - 60fps is more than what we need
+
+    // requestAnimationFrame() is more efficient, however, since a webcam stream
+    // plays at much lower than 60fps and we only need to capture individual frames
+    // we would only need at most the same frame rate as the webcam stream; plus,
+    // calling it more often than there are frames produces a "blink" effect
+    // within the compared frames
     //frameLoopTimeout = requestAnimationFrame(frameLoop);
-    frameLoopTimeout = setTimeout(frameLoop, 1000 / 30);
+    frameLoopTimeout = setTimeout(frameLoop, 1000 / 40);
 
     return frameLoopTimeout;
   }

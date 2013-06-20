@@ -8,6 +8,7 @@
     <style>
       body { font-family: sans-serif; }
       video, canvas, aside { float: left; margin: 10px; }
+      canvas { border: 1px solid red; background-color: #ccc; }
     </style>
     <script src="//www.google.com/jsapi"></script>
     <script>google.load('visualization', '1', {packages: ['gauge']});</script>
@@ -16,14 +17,13 @@
   <body>
     <video id="video-src" width="320" height="240" controls muted autoplay></video>
     <aside>
-      <div id="movement-gauge"></div>
+      <!-- <div id="movement-gauge"></div> -->
       Sensitivity: <input id="diff-threshold" type="range" min="50" max="100" value="95" title="Sensitivity"><br>
       <input id="binary-diff" type="checkbox" checked> Show binary diff
     </aside>
-    <!-- <canvas id="canvas-diff" width="320" height="240"></canvas> -->
 
     <script src="../js/shim.js"></script>
-    <script src="../js/gauge.js"></script>
+    <!-- <script src="../js/gauge.js"></script> -->
     <script src="motion.js"></script>
   </body>
 </html>
