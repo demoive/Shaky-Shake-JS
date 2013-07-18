@@ -1,0 +1,679 @@
+<div class="slides">
+    <section>
+        <h1 style="text-align: right;">
+<span>Motion</span>
+        <br>
+</h1>
+<h1>
+        <font style="font-size: 112px;">
+            <div style="text-align: right;">
+                <span style="font-size: 112px;">Detection</span>
+            </div>
+        </font>
+    </h1>
+<h1 style="text-align: right;">in <font color="#f1c232">J</font>ava<font color="#f1c232">S</font>cript</h1>
+<div style="text-align: right;">
+    <br>
+</div>
+<div style="text-align: right;">
+<br>
+<br>
+</div>
+<div style="text-align: right;">
+<br>
+</div>
+<div style="text-align: right;">Paulo Ávila -&nbsp;<span>4 July 2013</span>
+</div>
+<div style="text-align: right;">
+<span style="font-size: 29.50897216796875px; font-style: normal; font-variant: normal;">
+<font color="#f1c232">BarcelonaJS</font>
+</span>
+<br>
+</div>
+</section>
+<section data-background-color="rgba( 0, 0, 0, 0.6 )">
+    <h1>Who's Paulo?</h1>
+<div>
+    <br>
+</div>
+<div class="fragment" data-fragment-index="0">
+<font style="font-size: 42px;">Information Architect - Waytostay</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <br>
+</font>
+</div>
+<div class="fragment" data-fragment-index="1">
+<font style="font-size: 42px;">Brazil &gt; California &gt; Bilbao &gt; Barcelona</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <br>
+</font>
+</div>
+<div class="fragment" data-fragment-index="2">
+<font style="font-size: 42px;">JavaScript developer for ~10 years</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <br>
+</font>
+</div>
+<div class="fragment" data-fragment-index="3">
+<font style="font-size: 42px;">NOT expert in video or motion graphics</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <br>
+</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <br>
+</font>
+</div>
+<div class="fragment" data-fragment-index="4">
+<font style="font-size: 42px;">... nor &lt;canvas&gt;</font>
+</div>
+</section>
+<section data-background-color="rgba( 0, 0, 0, 0.6 )">
+    <h1>Agenda</h1>
+<div>
+<p>
+</p>
+<span>
+<div style="text-align: left;">
+    <span>
+        <br>
+    </span>
+</div>
+<div style="text-align: left;">
+<ol>
+<li class="fragment" data-fragment-index="0">
+<font style="font-size: 54px;">Questions<br>
+</font>
+</li>
+<li class="fragment" data-fragment-index="1">
+<font style="font-size: 54px;">
+    <span>Challenge (overview)</span>
+    <br>
+</font>
+</li>
+<li class="fragment" data-fragment-index="2">
+<font style="font-size: 54px;">
+    <span>Movement</span>
+    <br>
+</font>
+</li>
+<ol>
+<li class="fragment" data-fragment-index="2">
+<font style="font-size: 54px;">
+    <span>Video to Canvas</span>
+</font>
+</li>
+<li class="fragment" data-fragment-index="2">
+<font style="font-size: 54px;">
+    <span>Canvas basics - context</span>
+</font>
+</li>
+<li class="fragment" data-fragment-index="2">
+    <font style="font-size: 54px;">
+        <span>Photoshop</span>
+    </font>
+</li>
+</ol>
+<li class="fragment" data-fragment-index="3">
+<font style="font-size: 54px;">
+    <span>Direction of Motion</span>
+    <br>
+</font>
+</li>
+<li class="fragment" data-fragment-index="4">
+<span>
+<font style="font-size: 54px;">Applications</font>
+</span>
+<br>
+</li>
+</ol>
+</div>
+</span>
+<ol>
+</ol>
+</div>
+</section>
+<section>
+    <section>
+        <h1>The Challenge</h1>
+<div style="text-align: center;">
+    <br>
+</div>
+<div style="text-align: center;" class="fragment" data-fragment-index="0">
+    <font style="font-size: 42px;">Perform real-time image<br>
+    </font>
+    <span style="font-size: 42px;">stabilization in the browser</span>
+</div>
+<div style="text-align: center;">
+    <span style="font-size: 42px;">
+        <br>
+</span>
+</div>
+<div style="text-align: center;">
+    <span style="font-size: 42px;">
+        <br>
+</span>
+</div>
+<div style="text-align: center;" class="visible">
+    <ol>
+<li style="font-size: 42.492919921875px;" class="fragment" data-fragment-index="1">Counteract motion</li>
+<li style="font-size: 42.492919921875px;" class="fragment" data-fragment-index="2">Determine motion direction</li>
+<li style="font-size: 42.492919921875px;" class="fragment" data-fragment-index="3">Detect movement<font color="#ff0000" class="fragment" data-fragment-index="4">*</font>
+</li>
+</ol>
+<div style="text-align: left;">
+    <br>
+</div>
+<div style="text-align: left;">
+    <br>
+</div>
+</div>
+
+
+
+</section>
+<section>
+    <h1 style="font-style: normal; font-variant: normal;">The Hope</h1>
+<div>
+    <br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<font style="font-size: 42px;">Motion Tracking in AfterEffects</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <a href="http://localhost:8888/image-stabilization_1.mov">Video 1</a>
+</font>
+</div>
+<div>
+<font style="font-size: 42px;">
+    <span style="font-size: 42.492919921875px; font-style: normal; font-variant: normal;">
+        <a href="http://localhost:8888/image-stabilization_2.mov">Video 2</a>
+    </span>
+    <br>
+</font>
+</div>
+<div>(<a href="http://www.videocopilot.net/tutorial/stabilize_shaky_footage/">Andrew Kramer</a>)</div>
+</section>
+</section>
+<section>
+    <section>
+        <h1 style="font-style: normal; font-variant: normal;">&lt;<font color="#8e7cc3">video</font>&gt;<font color="#ffd700">2</font>&lt;<font color="#8e7cc3">canvas</font>&gt;</h1>
+<div style="text-align: left;">
+</div>
+<div style="text-align: left;" class="fragment" data-fragment-index="0">
+<span style="font-size: 42.492919921875px;">No access to image data in video tag</span>
+</div>
+<div style="text-align: left;" class="fragment" data-fragment-index="1">
+    <span style="font-size: 42.492919921875px;">Paint each frame onto &lt;canvas&gt;</span>
+</div>
+<div style="text-align: left;" class="fragment" data-fragment-index="1">
+        <span style="font-size: 42.492919921875px;">
+            <br>
+        </span>
+    </div>
+<div class="fragment" data-fragment-index="3" style="text-align: center;">
+    <span style="font-size: 42.492919921875px;">
+    <a href="http://localhost:8888/demos/1_video2canvas.html">Demo</a>
+</span>
+</div>
+<div style="text-align: left;">
+</div>
+<div style="text-align: left;" class="fragment" data-fragment-index="2">
+<pre><code class="js"><span style="font-family: monospace;">var srcVideo = document.</span><span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">getElementById</span><span style="font-family: monospace;">('src-video'),</span><br></code><code class="js">    srcCanvas = document.createElement('canvas'),</code><code class="js">    srcCtx = srcCanvas.getContext('2d');</code><code class="js"><br></code><code class="js">srcCanvas.width = <span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">srcVideo.width</span>;</code><code class="js">srcCanvas.height = <span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">srcVideo.height</span>;</code><code class="js"><br></code><code class="js">function frameLoop() {<br></code><code class="js">  srcCtx.drawImage(<span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">srcVideo</span>, 0, 0, <span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">srcVideo</span>.width, <span style="font-family: monospace; font-size: 16.5250244140625px; font-style: normal; font-variant: normal;">srcVideo</span>.height);</code><code class="js"><br></code><code class="js">  setTimeout(frameLoop, 1000 / 40);<br></code><code class="js">}</code></pre>
+</div>
+
+
+
+
+</section>
+<section>
+    <h1 style="font-style: normal; font-variant: normal;">&lt;<font color="#8e7cc3">canvas</font>&gt;</h1>
+<div style="text-align: left;">
+    <span style="font-size: 31.86968994140625px; white-space: pre-wrap;">
+        <font face="monospace">
+            <font color="#ffd700">context</font> = canvas.getContext('2d');</font>
+        </span>
+    </div>
+<div style="text-align: left;">
+<img src="https://s3.amazonaws.com/media-p.slid.es/uploads/demoive/images/43103/canvas-context.png" style="width: 382px;">
+    <span style="font-size: 31.86968994140625px; white-space: pre-wrap;">
+        <font face="monospace">
+            <br>
+        </font>
+    </span>
+</div>
+<div style="text-align: left;">
+<span style="font-style: normal; font-variant: normal; font-size: 31.86968994140625px; white-space: pre-wrap;">
+    <font face="monospace">
+        <font color="#ffd700">context</font>.</font>
+    </span>
+    <span style="font-style: normal; font-variant: normal; font-size: 31.86968994140625px; text-align: center; white-space: pre-wrap;">
+        <font face="monospace">
+            <font color="#ff00cd">getImageData</font>(<font color="#00ff00">x</font>, <font color="#00ff00">y</font>, <font color="#00ffff">w</font>, <font color="#00ffff">h</font>);</font>
+        </span>
+        <br>
+</div>
+<div style="text-align: left;">
+<span style="font-size: 31.86968994140625px; white-space: pre-wrap;">
+        <font face="monospace">
+            <font color="#ffd700">context</font>.</font>
+        </span>
+        <span style="text-align: center; font-size: 31.86968994140625px; white-space: pre-wrap;">
+            <font face="monospace">
+                <font color="#ff00cd">createImageData</font>(</font>
+            </span>
+            <font color="#00ffff" style="font-family: monospace; font-size: 31.86968994140625px; text-align: center; white-space: pre-wrap;">w</font>
+            <span style="font-family: monospace; font-size: 31.86968994140625px; font-style: normal; font-variant: normal; text-align: center; white-space: pre-wrap;">, </span>
+            <font color="#00ffff" style="font-family: monospace; font-size: 31.86968994140625px; text-align: center; white-space: pre-wrap;">h</font>
+            <span style="text-align: center; font-size: 31.86968994140625px; white-space: pre-wrap;">
+                <font face="monospace">);</font>
+            </span>
+</div>
+        </section>
+        <section>
+            <h1>
+                <font color="#ff00cd">imageData</font>
+            </h1>
+<div>
+            <br>
+            </div>
+<div style="text-align: left;">
+<ul>
+<li>
+<span style="font-size: 32px;">Returns an array containing pixel data</span>
+            <br>
+</li>
+<li>
+<span style="font-size: 32px;">Each series of 4 elements represents a pixel (rgba)</span>
+            <br>
+</li>
+</ul>
+<div>
+            <font color="#ffd700">
+                <span style="font-size: 31.86968994140625px;">
+                    <br>
+                </span>
+            </font>
+        </div>
+<ul>
+<li>
+        <span style="font-size: 32px;">
+            <font color="#ffd700">4px</font> by <font color="#ffd700">3px</font> grid</span>
+        </li>
+<li>
+        <span style="font-size: 32px;">length = (4 * 3) * 4 = 48</span>
+    </li>
+</ul>
+<div>
+    <span style="font-size: 31.86968994140625px;">
+        <br>
+    </span>
+</div>
+</div>
+<div>
+<pre style="font-style: normal; font-variant: normal; width: 861.8463745117188px;">
+    <code>
+        <font style="font-size: 32px;">[
+  <font color="#ff3000">r</font>,<font color="#017b00">g</font>,<font color="#2600ff">b</font>,<font color="#030303">a</font>,   <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+    </font>
+</code>
+<code>
+    <font style="font-size: 32px;">
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">  </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+    </font>
+</code>
+<code>
+    <font style="font-size: 32px;">
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">  </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">   </span>
+        <font color="#ff3000">r</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#017b00">g</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#2600ff">b</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+        <font color="#030303">a</font>
+        <span style="font-family: monospace; font-style: normal; font-variant: normal;">,</span>
+] </font>
+    </code>
+</pre>
+</div>
+</section>
+</section>
+<section>
+    <section>
+        <h2>Detecting Movement</h2>
+<div style="text-align: left;">
+        <br>
+    </div>
+<div style="text-align: left;">
+    <pre style="width: 859.7254638671875px;">
+        <code class="js" style="font-style: normal; font-variant: normal;">
+            <span style="font-family: monospace;">function frameLoop() {</span>
+        </code>
+        <code class="js">    // Get image data from the image drawn on the source canvas.
+    srcFrameImageData = srcCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+
+    // Create an image if the previous image doesn’t exist (1st iteration)
+    if (!prevFrameImageData) {
+      prevFrameImageData = srcFrameImageData;
+    }
+
+    movementPxCount = compareFrames(diffImageData, srcFrameImageData, prevFrameImageData);
+
+    // Store the current frame's image data for the next iteration.
+    prevFrameImageData = srcFrameImageData;<br>
+    </code>
+    <code class="js" style="font-style: normal; font-variant: normal;">
+        <br>
+    </code>
+    <code class="js" style="font-style: normal; font-variant: normal;">    setTimeout(frameLoop, 1000 / 40);<br>
+    </code>
+    <code class="js" style="font-style: normal; font-variant: normal;">}</code>
+</pre>
+</div>
+</section>
+<section>
+    <h2 style="text-align: center;">Blend</h2>
+<p class="fragment">
+    <a href="http://localhost:8888/demos/2_movement.html">Demo</a>
+</p>
+<div style="text-align: left;">
+<pre><code>// diff between 2 frames' luma to be considered as movement (a.k.a. sensitivity)
+var LUMA_DIFF_THRESHOLD = 20;
+
+function compareFrames(deltaImgData, imgData1, imgData2) {
+&nbsp; var imgDataSubPixels1 = imgData1.data,
+&nbsp; &nbsp; &nbsp; imgDataSubPixels2 = imgData2.data,
+&nbsp; &nbsp; &nbsp; deltaImgDataSubPixels = deltaImgData.data,
+&nbsp; &nbsp; &nbsp; subPixelCount = imgDataSubPixels1.length;
+
+&nbsp; // For each sub-pixel channel (rgba) of every pixel from the image data...
+&nbsp; while (i &lt; subPixelCount) {
+&nbsp; &nbsp; // Get the grayscale (achromatic) value of the pixel.
+&nbsp; &nbsp; pxLuminance1 = luma(imgDataSubPixels1[i], imgDataSubPixels1[i + 1], imgDataSubPixels1[i + 2]);
+&nbsp; &nbsp; pxLuminance2 = luma(imgDataSubPixels2[i], imgDataSubPixels2[i + 1], imgDataSubPixels2[i + 2]);
+
+&nbsp; &nbsp; // Get the difference in brightness of both pixels.
+&nbsp; &nbsp; pxLuminanceDiff = Math.abs(pxLuminance1 - pxLuminance2);
+
+&nbsp; &nbsp; // If brightness difference is "significant", set it to white, else black.
+&nbsp; &nbsp; if (pxLuminanceDiff &gt;= LUMA_DIFF_THRESHOLD) {
+&nbsp; &nbsp; &nbsp; pxBinaryDiff = 255;
+&nbsp; &nbsp; &nbsp; diffPxCount++;
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; pxBinaryDiff = 0;
+&nbsp; &nbsp; }
+
+&nbsp; &nbsp; // Write the difference in luminosity to the blended canvas context.
+&nbsp; &nbsp; // We write the same value to all color channels to show it in white since
+&nbsp; &nbsp; // there's no noticeable performance difference if we only use one color.
+&nbsp; &nbsp; deltaImgDataSubPixels[ &nbsp;i &nbsp;] = pxBinaryDiff; &nbsp; // r
+&nbsp; &nbsp; deltaImgDataSubPixels[i + 1] = pxBinaryDiff; &nbsp; // g
+&nbsp; &nbsp; deltaImgDataSubPixels[i + 2] = pxBinaryDiff; &nbsp; // b
+&nbsp; &nbsp; deltaImgDataSubPixels[i + 3] = 255; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// a
+
+&nbsp; &nbsp; // Advance to the next pixel (a set of rgba channels).
+&nbsp; &nbsp; i = (i + 4);
+&nbsp; }
+
+&nbsp; return diffPxCount;
+}</code></pre>
+<div>
+<pre><code>function luma(r, g, b) {
+&nbsp; return (r + g + b) / 3;
+&nbsp; //return (r+r+r + g+g+g+g+g+g + b) / 10;
+} </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+<section>
+    <h1>Photoshop</h1>
+<div>
+    <br>
+</div>
+<div style="text-align: left;">
+<div>
+<span style="font-size: 42.492919921875px;">Visual demo of what's going on...</span>
+</div>
+<div>
+<span style="font-size: 42.492919921875px;">
+    <br>
+</span>
+</div>
+<ul>
+<li class="fragment" data-fragment-index="0">
+<font style="font-size: 42px;">Blend mode: <font color="#ffd700">Difference</font>
+</font>
+<br>
+</li>
+<ul>
+<li class="fragment" data-fragment-index="1">
+<span>
+    <font>
+        <span style="font-size: 42.492919921875px;">Compares two layers</span>
+    </font>
+</span>
+</li>
+<li class="fragment" data-fragment-index="2">
+<span>
+    <font>
+        <span style="font-size: 42.492919921875px;">Looks at their pixel color information</span>
+    </font>
+</span>
+</li>
+<li class="fragment" data-fragment-index="3">
+<span>
+    <font>
+        <span style="font-size: 42.492919921875px;">Subtracts the darker of the two from the other</span>
+    </font>
+</span>
+</li>
+</ul>
+</ul>
+</div>
+</section>
+<section>
+    <h1>Direction of Motion</h1>
+<div>
+    <br>
+</div>
+<div class="fragment" data-fragment-index="8">
+    <font style="font-size: 42px;">
+        <a href="http://localhost:8888/demos/3_motion.html">Demo</a>
+    </font>
+</div>
+<div>
+    <br>
+</div>
+<div style="text-align: left;">
+    <ol>
+<li class="fragment" data-fragment-index="0">
+            <span style="font-size: 42px;">Get number of pixels</span>
+            <br>
+</li>
+        <li class="fragment" data-fragment-index="1">
+            <span style="font-size: 42px;">Shift the previous frame to one direction</span>
+            <br>
+</li>
+        <li class="fragment" data-fragment-index="2">
+            <span style="font-size: 42px;">Get number of pixels</span>
+            <br>
+</li>
+        <li class="fragment" data-fragment-index="3">
+            <span style="font-size: 42px;">If fewer pixels when shifted</span>
+            <br>
+</li>
+        <ol>
+<li class="fragment" data-fragment-index="4">
+                <span style="font-size: 42px;">direction of shift is the same as motion</span>
+            </li>
+        </ol>
+<li class="fragment" data-fragment-index="5">
+            <span style="font-size: 42px;">else</span>
+            <br>
+</li>
+        <ol>
+<li class="fragment" data-fragment-index="6">
+                <span style="font-size: 42px;">direction of motion is opposite as the shift</span>
+            </li>
+        </ol>
+</ol>
+</div>
+<div style="text-align: left;">
+    <font style="font-size: 42px;">
+        <br>
+</font>
+</div>
+<div style="text-align: left;" class="fragment" data-fragment-index="7">
+    <font style="font-size: 42px;">Repeat for y axis</font>
+</div>
+
+
+
+</section>
+<section>
+    <h1 style="font-style: normal; font-variant: normal;">Applications</h1>
+<div>
+    <br>
+</div>
+<div style="text-align: left;">
+<ul>
+<li class="fragment">
+    <font style="font-size: 42px;">Suggestions?</font>
+</li>
+</ul>
+<div>
+<span style="font-size: 42.492919921875px;">
+    <br>
+</span>
+</div>
+<div>
+<ul>
+<li class="fragment">
+<font style="font-size: 24px;">
+    <span style="font-size: 42.492919921875px; font-style: normal; font-variant: normal;">
+        <a href="https://developer.mozilla.org/en-US/docs/HTML/Manipulating_video_using_canvas">Green screen backdrop</a>
+    </span>
+</font>
+</li>
+<li class="fragment">
+    <span style="font-size: 42.492919921875px; font-style: normal; font-variant: normal;">Any background backdrop</span>
+    <br>
+    </li>
+<li class="fragment">
+<span style="font-size: 42.492919921875px;">Area detection: <a href="http://localhost:8888/examples/javascript_motion_detection_soundstep/">Game</a> </span>
+    <font style="font-size: 24px;">(credit: <a href="http://www.adobe.com/devnet/html5/articles/javascript-motion-detection.html">Romuald Quantin</a>)</font>
+</li>
+<li class="fragment">
+    <span style="font-size: 42.492919921875px;">Accessibility programs</span>
+    <br>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</div>

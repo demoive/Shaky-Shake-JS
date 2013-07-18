@@ -1,0 +1,1587 @@
+0:00:02.000,0:00:05.000
+[chatter]
+
+0:00:11.500,0:00:13.000
+>> Paulo: Ok, hello.
+
+0:00:14.000,0:00:15.000
+[chatter]
+
+0:00:16.000,0:00:17.000
+>> Patrick: Can you all hear it?
+
+0:00:18.000,0:00:20.000
+>> Paulo: So I guess I'll speak really close.
+
+0:00:22.000,0:00:23.000
+So, hello everyone.
+
+0:00:24.00,0:00:28.500
+Before I start, really quickly, we're recording
+this on that camera over there, but it only
+
+0:00:28.500,0:00:34.000
+records in thirty-minute intervals, so I have
+a timer and if I can ask - when it goes off
+
+0:00:34.000,0:00:37.500
+- someone just to re-click the button so that
+we can record it.
+
+0:00:38.000,0:00:39.000
+Or I guess Patrick can do it as well.
+
+0:00:00.000,0:00:00.000
+Alright, so I'm talking about motion detection
+in JavaScript... in the browser.
+
+0:00:00.000,0:00:00.000
+Not this type of motion in the window but
+in a video so that would be a webcam stream
+
+0:00:00.000,0:00:00.000
+or a video file.
+
+0:00:00.000,0:00:00.000
+Alright, let's get into it.
+
+0:00:00.000,0:00:00.000
+So just a little about myself:
+
+0:00:00.000,0:00:00.000
+I was born in Brazil, but I grew up in California.
+
+0:00:00.000,0:00:00.000
+I studied in Bilbao and then that prompted
+me to move to Barcelona, and I've been here
+
+0:00:00.000,0:00:00.000
+for a little over five years.
+
+0:00:00.000,0:00:00.000
+I'm an Information Architect at a company
+here called Waytostay (we do apartment rentals).
+
+0:00:00.000,0:00:00.000
+I've been doing JavaScript development for
+about 10 years - more seriously in the past
+
+0:00:00.000,0:00:00.000
+four or five.
+
+0:00:00.000,0:00:00.000
+So I wanted to mention this: that I am not
+an expert in video or motion graphics.
+
+0:00:00.000,0:00:00.000
+And I mention that not to undermine me, but
+to encourage you guys because this is about
+
+0:00:00.000,0:00:00.000
+video and graphics and don't get intimidated
+if you don't know something.
+
+0:00:00.000,0:00:00.000
+I got into this with this project that I did.
+
+0:00:00.000,0:00:00.000
+We're also dealing the the canvas and I've
+never done too much work with the canvas - just
+
+0:00:00.000,0:00:00.000
+to accompany the previous comment.
+
+0:00:00.000,0:00:00.000
+Alright so, what I'm going to be talking about:
+
+0:00:00.000,0:00:00.000
+The reason I put "Questions" first is because
+I like an interactive audience so if you guys
+
+0:00:00.000,0:00:00.000
+have question or comments feel free to shout
+them out. Don't be rude, but just raise your
+
+0:00:00.000,0:00:00.000
+hands or ask away and we'll interact like
+that.
+
+0:00:00.000,0:00:00.000
+And that helps me know too if you guys are
+following along or if I'm boring you guys
+
+0:00:00.000,0:00:00.000
+so don't be afraid.
+
+0:00:00.000,0:00:00.000
+Ok, so first thing - I'll just do an overview.
+
+0:00:00.000,0:00:00.000
+This project that I did is a pretty small
+project but it was something I wanted to challenge
+
+0:00:00.000,0:00:00.000
+myself with to see if it was possible.
+
+0:00:00.000,0:00:00.000
+Essentially it was to detect movement in a
+video as I've said.
+
+0:00:00.000,0:00:00.000
+So there's going to be three... I'll go through
+3 different steps that I did to get to that
+
+0:00:00.000,0:00:00.000
+stage.
+
+0:00:00.000,0:00:00.000
+And then finally to... the difference between
+detecting movement, by the way... I separated
+
+0:00:00.000,0:00:00.000
+it out into "Detect Movement" (which is just
+random motion) and then "Detecting Motion"
+
+0:00:00.000,0:00:00.000
+is detecting the direction of the motion.
+
+0:00:00.000,0:00:00.000
+And then if we have time we'll just talk about
+some potential applications that this can
+
+0:00:00.000,0:00:00.000
+be used for.
+
+0:00:00.000,0:00:00.000
+And feel free to think - if you think of anything
+during the presentation, I'll ask if you guys
+
+0:00:00.000,0:00:00.000
+have any additional suggestions.
+
+0:00:00.000,0:00:00.000
+Ok, so on to "The Challenge."
+
+0:00:00.000,0:00:00.000
+This is what I wanted to do: to perform real-time
+image stabilization in the browser.
+
+0:00:00.000,0:00:00.000
+A quick foreshadow: I did not get to this.
+It's actually pretty difficult, and we'll
+
+0:00:00.000,0:00:00.000
+talk about why.
+
+0:00:00.000,0:00:00.000
+But that's what I set out to do.
+
+0:00:00.000,0:00:00.000
+So, in order to be able to stabilize an image,
+you need to counteract the motion that's happening
+
+0:00:00.000,0:00:00.000
+in the video.
+
+0:00:00.000,0:00:00.000
+If that's not intuitive it will become so.
+
+0:00:00.000,0:00:00.000
+So in order to do that, you need to determine
+the direction of the motion.
+
+0:00:00.000,0:00:00.000
+But first you have to be able to detect if
+there is movement in the video.
+
+0:00:00.000,0:00:00.000
+So I'm actually going to go through these
+three points but in reverse order cause I
+
+0:00:00.000,0:00:00.000
+actually started with number 3 since it's
+the easiest.
+
+0:00:00.000,0:00:00.000
+Uhh, for the sake of time, let's just ignore
+that little asterix.
+
+0:00:00.000,0:00:00.000
+Ok, I wanted to show this.
+
+0:00:00.000,0:00:00.000
+So this was the hope - this would be like
+the goal, the ultimate goal to be able to
+
+0:00:00.000,0:00:00.000
+do.
+
+0:00:00.000,0:00:00.000
+So this is in Adobe After Effects - which
+is a video editing program (quite sophisticated)
+
+0:00:00.000,0:00:00.000
+and the way you can do image stabilization
+in here is you actually find a point that
+
+0:00:00.000,0:00:00.000
+you want to track in your video, you track
+it (not in real-time),
+
+0:00:00.000,0:00:00.000
+and what it does is it basically plots the
+points where that pixel or the area you defined,
+
+0:00:00.000,0:00:00.000
+where it moved to.
+
+0:00:00.000,0:00:00.000
+With that information, then when you actually
+compile the movie or process it,
+
+0:00:00.000,0:00:00.000
+you can counteract the motion.
+
+0:00:00.000,0:00:00.000
+So it would look something like this.
+
+0:00:00.000,0:00:00.000
+So if that screen wasn't moving around, the
+image in the video would be moving around
+
+0:00:00.000,0:00:00.000
+and that's what we want to prevent.
+
+0:00:00.000,0:00:00.000
+So that's what I had in my head; that's what
+I was trying to do in JavaScript,
+
+0:00:00.000,0:00:00.000
+um, so let's see where I got.
+
+0:00:00.000,0:00:00.000
+Alright, the first thing we have to do is...
+
+0:00:00.000,0:00:00.000
+with the video element, we don't have access
+to the pixel data, we don't have access to
+
+0:00:00.000,0:00:00.000
+the frames.
+
+0:00:00.000,0:00:00.000
+We have access to be able to pause, play,
+slow down, volume, things like that.
+
+0:00:00.000,0:00:00.000
+So to get started, we have to put all the
+image data into the canvas cause that will
+
+0:00:00.000,0:00:00.000
+allow us to manipulate and read the pixels.
+
+0:00:00.000,0:00:00.000
+So the first step is to transfer the video
+to the canvas.
+
+0:00:00.000,0:00:00.000
+Now this actually isn't too hard and there's
+a small code snippet here.
+
+0:00:00.000,0:00:00.000
+You guys definitely won't be able to read
+that.
+
+0:00:00.000,0:00:00.000
+Um, essentially we have a source video which
+is just the DOM element,
+
+0:00:00.000,0:00:00.000
+we set up a canvas,
+
+0:00:00.000,0:00:00.000
+setup the proper width and height to just
+be the same as the video
+
+0:00:00.000,0:00:00.000
+and here's just a small function (it's a loop
+function that calls itself) and all we're
+
+0:00:00.000,0:00:00.000
+doing...
+
+0:00:00.000,0:00:00.000
+I know this is really difficult, let me zoom
+in.
+
+0:00:00.000,0:00:00.000
+Alright, still pretty light but um - there's
+this function which is part of the context
+
+0:00:00.000,0:00:00.000
+object which I'll talk a little bit about
+later - and all your doing is specifying the
+
+0:00:00.000,0:00:00.000
+actual DOM element (which is just "document.getElementById");
+
+0:00:00.000,0:00:00.000
+you just pass that, the starting coordinates
+(so top left in x y), and then how much of
+
+0:00:00.000,0:00:00.000
+the image you 
+want to draw
+
+0:00:00.000,0:00:00.000
+[indistinct]
+
+0:00:00.000,0:00:00.000
+And if you loop this, everytime you call it,
+it will draw the frame onto your canvas.
+
+0:00:00.000,0:00:00.000
+And you might think this would generate a
+big overhead, but it's actually pretty performant
+
+0:00:00.000,0:00:00.000
+so there's no problem there.
+
+0:00:00.000,0:00:00.000
+This is calling itself at 40 frames per second.
+
+0:00:00.000,0:00:00.000
+The reason for that is because I'm using my
+webcam which has a slower framerate than most
+
+0:00:00.000,0:00:00.000
+videos.
+
+0:00:00.000,0:00:00.000
+Typically we'd want 60fps.
+
+0:00:00.000,0:00:00.000
+In this case, actually, sometimes I needed
+to lower it a little bit to 30 or even 20.
+
+0:00:00.000,0:00:00.000
+No questions?
+
+0:00:00.000,0:00:00.000
+Alright. So, hopefully the webcam will work
+ok... so...
+
+0:00:00.000,0:00:00.000
+You guys can see me? Over there, not here.
+
+0:00:00.000,0:00:00.000
+This is the video element - you can see I
+have the controls.
+
+0:00:00.000,0:00:00.000
+I can pause it play again. That's the standard
+video element.
+
+0:00:00.000,0:00:00.000
+And then what I have over there on the right
+is a canvas which is being drawn every,
+
+0:00:00.000,0:00:00.000
+40 times a second. And you can see no problems
+with lag.
+
+0:00:00.000,0:00:00.000
+Alright...
+
+0:00:00.000,0:00:00.000
+>> Audience: I have a question. Are you dropping
+frames or not to maintain the frame rate?
+
+0:00:00.000,0:00:00.000
+>> Paulo: Dropping frames?
+
+0:00:00.000,0:00:00.000
+>> Audience: Yeah.
+
+0:00:00.000,0:00:00.000
+>> Paulo: I might be.
+
+0:00:00.000,0:00:00.000
+So what's happening in that function that's
+calling itself, is it's calling itself 40
+
+0:00:00.000,0:00:00.000
+times a second. If that video is playing faster
+that that, I'm only capturing the frame rate
+
+0:00:00.000,0:00:00.000
+that I'm repeating at.
+
+0:00:00.000,0:00:00.000
+So I can bump that up, and actually people
+would recommend - people like Paul Irish who
+
+0:00:00.000,0:00:00.000
+is a big advocate of it (at least the first
+time I heard of it anyway) - of using the...
+
+0:00:00.000,0:00:00.000
+I drew a blank right now... the request...
+request frame rate... requestAnimationFrame,
+
+0:00:00.000,0:00:00.000
+yeah that's it.
+
+0:00:00.000,0:00:00.000
+And what that does is the browser determines
+how many times to call it, and it optimizes
+
+0:00:00.000,0:00:00.000
+it for you. So it will give you the best that
+you can get basically.
+
+0:00:00.000,0:00:00.000
+The reason I'm not using that is because since
+the webcam is definitely slower than 60fps,
+
+0:00:00.000,0:00:00.000
+you get a flash effect going on because as
+you're trying to draw faster than the video
+
+0:00:00.000,0:00:00.000
+is giving you,
+
+0:00:00.000,0:00:00.000
+you get every once in a while a black frame
+because there's nothing to draw,
+
+0:00:00.000,0:00:00.000
+so I did it manually calling a setTimeout.
+
+0:00:00.000,0:00:00.000
+Does that answer the...? Good?
+
+0:00:00.000,0:00:00.000
+>> Audience: Thank you.
+
+0:00:00.000,0:00:00.000
+>> Paulo: Ok, so let's get in to a little
+bit...
+
+0:00:00.000,0:00:00.000
+talking about the canvas element and how it
+does it's thing.
+
+0:00:00.000,0:00:00.000
+So that thing I mentioned earlier (the context)
+that's actually how you interact with the
+
+0:00:00.000,0:00:00.000
+canvas.
+
+0:00:00.000,0:00:00.000
+This you can assume to be the actual canvas
+element in the DOM (document.getElementById),
+
+0:00:00.000,0:00:00.000
+and you have to "getContext" of the canvas
+which is what we'll be working with.
+
+0:00:00.000,0:00:00.000
+It's kind of out of scope so we don't need
+to talk about it too much.
+
+0:00:00.000,0:00:00.000
+So once you have this context you can do interesting
+things with the data that's in them.
+
+0:00:00.000,0:00:00.000
+We're going to be using these two functions
+- they were the only ones of the context that
+
+0:00:00.000,0:00:00.000
+I use in this project.
+
+0:00:00.000,0:00:00.000
+Which is "getImageData" - which does the following:
+
+0:00:00.000,0:00:00.000
+So over here you can't see it well, but there
+is a square which is the whole canvas frame.
+
+0:00:00.000,0:00:00.000
+And you can basically say: "give me all the
+data that starts at this coordinate (x and
+
+0:00:00.000,0:00:00.000
+y) for this width and height.
+
+0:00:00.000,0:00:00.000
+So that's that box.
+
+0:00:00.000,0:00:00.000
+It's kind of self-explanatory, no? With the
+image?
+
+0:00:00.000,0:00:00.000
+So what this will do is return an object that
+has data of the image in this area.
+
+0:00:00.000,0:00:00.000
+So that's how you get it from an existing
+canvas.
+
+0:00:00.000,0:00:00.000
+But you can also create one (with blank data)
+so that you can use it without having to draw
+
+0:00:00.000,0:00:00.000
+it in the browser (which we actually do).
+
+0:00:00.000,0:00:00.000
+Any questions about that? This is probably
+the most complex or technical part of this
+
+0:00:00.000,0:00:00.000
+so...
+
+0:00:00.000,0:00:00.000
+[laughter]
+
+0:00:00.000,0:00:00.000
+Ok, so this "imageData" is the object I was
+talking about that is returned by that call.
+
+0:00:00.000,0:00:00.000
+What it does - let me advance one more - so
+it actually returns an "imageData" object
+
+0:00:00.000,0:00:00.000
+which has a property in it call "data" which
+is what we are actually going to use.
+
+0:00:00.000,0:00:00.000
+So what this does (the .data) is an array
+containing all the pixel data for your imageData.
+
+0:00:00.000,0:00:00.000
+It's a little bit counterintuitive and you
+can't see because I made it black here but
+
+0:00:00.000,0:00:00.000
+that's an "a".
+
+0:00:00.000,0:00:00.000
+So essentially it returns an array that for
+every pixel, it has four items in the array.
+
+0:00:00.000,0:00:00.000
+They're sequential and they represent the
+sub-pixels of a pixel (all the different channels):
+
+0:00:00.000,0:00:00.000
+red, green, blue and the alpha channel for
+every pixel.
+
+0:00:00.000,0:00:00.000
+So that's pretty cool.
+
+0:00:00.000,0:00:00.000
+So now we have... we can manipulate down to
+the pixel level of our image.
+
+0:00:00.000,0:00:00.000
+So all sorts of possibilities open up.
+
+0:00:00.000,0:00:00.000
+So just in this example (this visual example
+I have setup) this is a 4 by 3 grid
+
+0:00:00.000,0:00:00.000
+We got one, two, three, four going across
+and three down,
+
+0:00:00.000,0:00:00.000
+so the length of the array is 48 cause we
+had to multple by four because of the differnt
+
+0:00:00.000,0:00:00.000
+sub channels.
+
+0:00:00.000,0:00:00.000
+Alright, more code.
+
+0:00:00.000,0:00:00.000
+Alright, I'll try to talk through it cause
+I think it's going to be hard to see.
+
+0:00:00.000,0:00:00.000
+Sooo, this is the same frameLoop function
+that we had before (that tiny one that was
+
+0:00:00.000,0:00:00.000
+down here) I've just added some things.
+
+0:00:00.000,0:00:00.000
+We create a blank image data
+
+0:00:00.000,0:00:00.000
+out of a source context with the same width
+and height as our video frame.
+
+0:00:00.000,0:00:00.000
+And we store that here temporarily. We're
+gonna store something in there that will be
+
+0:00:00.000,0:00:00.000
+usable to visualize things later.
+
+0:00:00.000,0:00:00.000
+Now, to be able to detect movement, you need
+to be able to compare at least two frames,
+
+0:00:00.000,0:00:00.000
+right?
+
+0:00:00.000,0:00:00.000
+If you take a picture on a [still] camera,
+there's no real movement there so you need
+
+0:00:00.000,0:00:00.000
+at least two frames.
+
+0:00:00.000,0:00:00.000
+So over here we're going to be comparing the
+previous (from the previous iteration) and
+
+0:00:00.000,0:00:00.000
+the current one.
+
+0:00:00.000,0:00:00.000
+So this if statement is only used for the
+first iteration where we don't have a previous
+
+0:00:00.000,0:00:00.000
+frame.
+
+0:00:00.000,0:00:00.000
+Then we have this special function here which
+is on the next slide
+
+0:00:00.000,0:00:00.000
+where we pass in this blank image data object
+
+0:00:00.000,0:00:00.000
+and then the current and previous frames.
+
+0:00:00.000,0:00:00.000
+Now let's go see what is happening there.
+
+0:00:00.000,0:00:00.000
+And that other stuff is just to repeat the
+loop.
+
+0:00:00.000,0:00:00.000
+Ok so this is the "compareFrames" function.
+
+0:00:00.000,0:00:00.000
+So I'm passing in the imageData object of
+the current and previous frame.
+
+0:00:00.000,0:00:00.000
+I do ".data" on them so that we get the actual
+array that I want to check
+
+0:00:00.000,0:00:00.000
+and I start my loop.
+
+0:00:00.000,0:00:00.000
+So I have a loop that's looping through every
+single pixel in my imageData frame.
+
+0:00:00.000,0:00:00.000
+Now if you remember, this is going to iterate
+through every single sub-pixel
+
+0:00:00.000,0:00:00.000
+which we don't actually need to do,
+
+0:00:00.000,0:00:00.000
+so my increment down at the bottom does a
+"plus four"
+
+0:00:00.000,0:00:00.000
+so then I can advance to the next actual pixel
+instead of sub-pixel.
+
+0:00:00.000,0:00:00.000
+So inside this loop,
+
+0:00:00.000,0:00:00.000
+there's a function here called "luma" which
+is calculating the lumniosity of the pixel.
+
+0:00:00.000,0:00:00.000
+So, this is also going to start getting ahead
+of us, but:
+
+0:00:00.000,0:00:00.000
+when you have a color image as we have an
+rgb channel,
+
+0:00:00.000,0:00:00.000
+if you want to convert it to black and white
+
+0:00:00.000,0:00:00.000
+all you care about is the brightness of each
+sub-pixel.
+
+0:00:00.000,0:00:00.000
+So "is there a lot of red?" if there's "few
+green" or "a lot of blue."
+
+0:00:00.000,0:00:00.000
+So the way you calculate the lumninosity of
+it is you average the three pixels.
+
+0:00:00.000,0:00:00.000
+So here I'm passing in the "r" (which is the
+red channel) then the next one (so plus 1)
+
+0:00:00.000,0:00:00.000
+which would be the green and then the blue.
+
+0:00:00.000,0:00:00.000
+So now down here is the luma function (I know
+you can't see it) all it's doing is adding
+
+0:00:00.000,0:00:00.000
+"r + g + b" and dividing by three.
+
+0:00:00.000,0:00:00.000
+And by the way, "rgb" has a value between
+0 and 255 just like when you set a color in
+
+0:00:00.000,0:00:00.000
+CSS - it can have that range.
+
+0:00:00.000,0:00:00.000
+Alright, so this is going to return... so
+now...
+
+0:00:00.000,0:00:00.000
+this represents the gray scale value of the
+pixel that we're currently on - for the current
+
+0:00:00.000,0:00:00.000
+and previous frame.
+
+0:00:00.000,0:00:00.000
+And now I do a difference between them - subtract
+each other, absolute value - so now I have
+
+0:00:00.000,0:00:00.000
+how much brightness changed on the current
+pixel that I have.
+
+0:00:00.000,0:00:00.000
+You can start seeing how we're getting to
+detecting if there is a difference between
+
+0:00:00.000,0:00:00.000
+a previous and a current frame that are stacked
+on top of each other.
+
+0:00:00.000,0:00:00.000
+Yeah?
+
+0:00:00.000,0:00:00.000
+Ok, umm...
+
+0:00:00.000,0:00:00.000
+this is kind of an interesting part as well:
+
+0:00:00.000,0:00:00.000
+I set a "threshold"
+
+0:00:00.000,0:00:00.000
+(which I think I did up on top)
+
+0:00:00.000,0:00:00.000
+threshold set to 20 (so that's in the value
+range: 0-255)...
+
+0:00:00.000,0:00:00.000
+so you can play with this and it will basically
+be the threshold of whether the brightness
+
+0:00:00.000,0:00:00.000
+difference was big enough to actually consider
+movement.
+
+0:00:00.000,0:00:00.000
+And we'll actually be able to play with that
+in another example.
+
+0:00:00.000,0:00:00.000
+So in...
+
+0:00:00.000,0:00:00.000
+what this allows you to do is if it's above
+the threshold set the pixel to white because
+
+0:00:00.000,0:00:00.000
+then it's easier to see if you're trying to
+visualize it.
+
+0:00:00.000,0:00:00.000
+If not, set it to black.
+
+0:00:00.000,0:00:00.000
+And then we do a count if this happens because
+we want to know how many of these "diffPixels"
+
+0:00:00.000,0:00:00.000
+(as I call it)
+
+0:00:00.000,0:00:00.000
+how many of these "diffPixels" happened throughout
+the frame.
+
+0:00:00.000,0:00:00.000
+Ok, and then I write this value (255 or 0)
+out to my reference imageData object that
+
+0:00:00.000,0:00:00.000
+I craeated earlier and passed into the function.
+
+0:00:00.000,0:00:00.000
+I basically write "full value" (255) to all
+the channels (r, g, and b) and that will produce
+
+0:00:00.000,0:00:00.000
+white.
+
+0:00:00.000,0:00:00.000
+Alright, thanks for going through that. I
+know it's really dark and
+
+0:00:00.000,0:00:00.000
+you probably didn't see as much as you should
+have.
+
+0:00:00.000,0:00:00.000
+Ok so now we're going to detect movement.
+
+0:00:00.000,0:00:00.000
+So what's going on here?
+
+0:00:00.000,0:00:00.000
+I have the video element as before.
+
+0:00:00.000,0:00:00.000
+But my canvas element, as you can see,
+
+0:00:00.000,0:00:00.000
+it's not drawing the image,
+
+0:00:00.000,0:00:00.000
+it's drawing the difference of the pixels
+data.
+
+0:00:00.000,0:00:00.000
+So that little blue bar that's moving there,
+
+0:00:00.000,0:00:00.000
+all that's showing... is representing the
+number of white pixels that you see on that
+
+0:00:00.000,0:00:00.000
+canvas. K?
+
+0:00:00.000,0:00:00.000
+So that loop that I was doing is basically
+going through every single pixel, every frame
+
+0:00:00.000,0:00:00.000
+(and this is 40 times a seconds times all
+the pixels in the image).
+
+0:00:00.000,0:00:00.000
+So yes, my fan does start going after a while.
+
+0:00:00.000,0:00:00.000
+But, that's pretty neat.
+
+0:00:00.000,0:00:00.000
+So if I stand totally still, it goes black.
+
+0:00:00.000,0:00:00.000
+And if I start moving, you can see the difference.
+If I move real fast, the blue bar jumps up.
+
+0:00:00.000,0:00:00.000
+Pretty nice.
+
+0:00:00.000,0:00:00.000
+And then this slider that I setup is bound
+to the threshold value.
+
+0:00:00.000,0:00:00.000
+So if I turn it down it becomes less sensative.
+
+0:00:00.000,0:00:00.000
+See I'm moving? There are fewer white pixels.
+
+0:00:00.000,0:00:00.000
+If I bump it up all the way, it whites out
+because there's always "less than or equal
+
+0:00:00.000,0:00:00.000
+to 0" difference between the pixels.
+
+0:00:00.000,0:00:00.000
+So, there - I'm keeping it pretty high
+
+0:00:00.000,0:00:00.000
+and we can see the actual noise from the image
+because it's a shitty camera
+
+0:00:00.000,0:00:00.000
+[laughter]
+
+0:00:00.000,0:00:00.000
+and because we're in a basement so there's
+not a lot of light.
+
+0:00:00.000,0:00:00.000
+Ok, now this checkbox,
+
+0:00:00.000,0:00:00.000
+what this does is it enables or disables that
+condition where I had to force it to be white
+
+0:00:00.000,0:00:00.000
+or black.
+
+0:00:00.000,0:00:00.000
+If I turn that off...
+
+0:00:00.000,0:00:00.000
+let me turn the sensitivity up a bit...
+
+0:00:00.000,0:00:00.000
+actually that won't make too much of a difference.
+
+0:00:00.000,0:00:00.000
+So now you see something different. Now you're
+actually seeing the...
+
+0:00:00.000,0:00:00.000
+I just got my reminder to... ah, you did?
+Terrific, thanks. I'll start it again...
+
+0:00:00.000,0:00:00.000
+Ok so, I turned off the "binary diff" so now
+we're actually seeing the luminosity difference
+
+0:00:00.000,0:00:00.000
+of the pixels.
+
+0:00:00.000,0:00:00.000
+Just kind of fun.
+
+0:00:00.000,0:00:00.000
+The other is much more useful because we just
+care about how many of those pixels we consider
+
+0:00:00.000,0:00:00.000
+to be a "motion pixel".
+
+0:00:00.000,0:00:00.000
+Alright, that's it for that demo.
+
+0:00:00.000,0:00:00.000
+Good so far still?
+
+0:00:00.000,0:00:00.000
+You can hear me ok?
+
+0:00:00.000,0:00:00.000
+How are we doing on time?
+
+0:00:00.000,0:00:00.000
+Ok, I'm going to skip this section.
+
+0:00:00.000,0:00:00.000
+What I was going to do is, in Photoshop, you
+can setup different layers and it's a good
+
+0:00:00.000,0:00:00.000
+way to be able to visualize and interact with
+what's happening in the code we just setup.
+
+0:00:00.000,0:00:00.000
+Photoshop let's you setup different layers
+and
+
+0:00:00.000,0:00:00.000
+it allows you to blend those in several different
+ways.
+
+0:00:00.000,0:00:00.000
+And one of them is called "Difference"
+
+0:00:00.000,0:00:00.000
+and what it does is essentially the exact
+same thing:
+
+0:00:00.000,0:00:00.000
+it does a difference between the pixels and
+if there is a difference,
+
+0:00:00.000,0:00:00.000
+it will show it in white and if not in black.
+
+0:00:00.000,0:00:00.000
+So I'll skip that because I think you guys
+got that.
+
+0:00:00.000,0:00:00.000
+Ok, let's get into this because this is the
+final part.
+
+0:00:00.000,0:00:00.000
+So now to be able to detect the actual direction
+of the motion.
+
+0:00:00.000,0:00:00.000
+So we've been able to detect movement,
+
+0:00:00.000,0:00:00.000
+does anyone have any ideas of how we might
+detect the direction of the movement?
+
+0:00:00.000,0:00:00.000
+Maybe.
+
+0:00:00.000,0:00:00.000
+Ok, I'll give you five seconds...
+
+0:00:00.000,0:00:00.000
+Well, let's walk through it.
+
+0:00:00.000,0:00:00.000
+So this is my solution, there might be others,
+
+0:00:00.000,0:00:00.000
+but this is the simplest I could think of.
+
+0:00:00.000,0:00:00.000
+First we get the number of pixels (like we
+were doing with that blue bar)
+
+0:00:00.000,0:00:00.000
+So the number of [white] pixels in the current
+difference frame.
+
+0:00:00.000,0:00:00.000
+So now we have a number value.
+
+0:00:00.000,0:00:00.000
+What I decided to do is,
+
+0:00:00.000,0:00:00.000
+imagine I have two layers,
+
+0:00:00.000,0:00:00.000
+this is the current and this is the previous.
+
+0:00:00.000,0:00:00.000
+So in the same iteration loop,
+
+0:00:00.000,0:00:00.000
+before I move on to the next,
+
+0:00:00.000,0:00:00.000
+I shift the prvious frame a little bit - I
+did it by three pixels.
+
+0:00:00.000,0:00:00.000
+So now with the shift,
+
+0:00:00.000,0:00:00.000
+I get the number of pixels again
+
+0:00:00.000,0:00:00.000
+(do the same diff I did before)
+
+0:00:00.000,0:00:00.000
+and if there are fewer pixels from the previous
+one
+
+0:00:00.000,0:00:00.000
+I know the direction of the movement happened
+in the same way that I moved my difference
+
+0:00:00.000,0:00:00.000
+frame.
+
+0:00:00.000,0:00:00.000
+This is actually where the Photoshop example
+might of come in handy.
+
+0:00:00.000,0:00:00.000
+Are there any doubts about that?
+
+0:00:00.000,0:00:00.000
+It's a little hard to visualize without a
+reference.
+
+0:00:00.000,0:00:00.000
+Ok. And else, the movement happened in the
+other direction.
+
+0:00:00.000,0:00:00.000
+I mean, that's really simplistic, but we're
+we're also not going for a high level of detection.
+
+0:00:00.000,0:00:00.000
+And then you can repeat that for the other
+axis (the y axis)
+
+0:00:00.000,0:00:00.000
+to be able to detection motion up and down
+cause this will only detect it on one axis
+
+0:00:00.000,0:00:00.000
+(the x axis).
+
+0:00:00.000,0:00:00.000
+Ok let's get a demo and if there are any doubts,
+this should clear them up.
+
+0:00:00.000,0:00:00.000
+Ok, so we basically have the same setup here,
+
+0:00:00.000,0:00:00.000
+the video on the left,
+
+0:00:00.000,0:00:00.000
+but the difference that we're seeing now in
+the canvas (in black and white)...
+
+0:00:00.000,0:00:00.000
+you'll notice that if I stand still,
+
+0:00:00.000,0:00:00.000
+there's still a diffrence
+
+0:00:00.000,0:00:00.000
+and the reason is because what I'm showing
+here in this canvas is the comparison of the
+
+0:00:00.000,0:00:00.000
+shifted previous frame.
+
+0:00:00.000,0:00:00.000
+So all the white that's showing there is 3
+pixels to the left
+
+0:00:00.000,0:00:00.000
+(or right, I forgot which one it is)
+
+0:00:00.000,0:00:00.000
+of the difference.
+
+0:00:00.000,0:00:00.000
+So now the blue bar is still showing the same
+data.
+
+0:00:00.000,0:00:00.000
+So if I stand still it shows how many white
+pixels are in there.
+
+0:00:00.000,0:00:00.000
+But if I move, let's see,
+
+0:00:00.000,0:00:00.000
+if I move this way
+
+0:00:00.000,0:00:00.000
+you still have white pixels.
+
+0:00:00.000,0:00:00.000
+You can see the blue bar moving to the right
+because I'm basically increasing the number
+
+0:00:00.000,0:00:00.000
+of pixels on the thing.
+
+0:00:00.000,0:00:00.000
+But if I move it in the other direction, you'll
+notice my hand kind of goes black.
+
+0:00:00.000,0:00:00.000
+And that's because I'm catching up to the
+shift that I did with the previous frame.
+
+0:00:00.000,0:00:00.000
+And it actually works, if you look at the
+blue bar and I move my body, you'll notice
+
+0:00:00.000,0:00:00.000
+it goes down.
+
+0:00:00.000,0:00:00.000
+And if I move over to the right, it goes up.
+
+0:00:00.000,0:00:00.000
+So right there, I've detected direction on
+one of the axis.
+
+0:00:00.000,0:00:00.000
+So that's pretty... not too bad.
+
+0:00:00.000,0:00:00.000
+And I did it all on my own!
+
+0:00:00.000,0:00:00.000
+[laughter]
+
+0:00:00.000,0:00:00.000
+And I think we're out of time, so...
+
+0:00:00.000,0:00:00.000
+maybe we'll skip this part.
+
+0:00:00.000,0:00:00.000
+Just some potential applications that we can
+use this for.
+
+0:00:00.000,0:00:00.000
+I guess we'll count this as part of the "Questions"
+segment at the end.
+
+0:00:00.000,0:00:00.000
+So anyone with any possible suggestions?
+
+0:00:00.000,0:00:00.000
+I'll go over my list and maybe that will give
+you ideas.
+
+0:00:00.000,0:00:00.000
+That one doesn't actually apply to motion
+so I'll skip it.
+
+0:00:00.000,0:00:00.000
+It's just other things that you can do with
+the pixel data on the canvas.
+
+0:00:00.000,0:00:00.000
+I should show this because it is a nice game
+that someone setup
+
+0:00:00.000,0:00:00.000
+using the exact same concept...
+
+0:00:00.000,0:00:00.000
+which is pretty neat.
+
+0:00:00.000,0:00:00.000
+So what this guy did,
+
+0:00:00.000,0:00:00.000
+is he setup a similar thing (you can see on
+the bottom right there it's showing the difference
+
+0:00:00.000,0:00:00.000
+pixels).
+
+0:00:00.000,0:00:00.000
+But what he does is up here where there are
+symbols,
+
+0:00:00.000,0:00:00.000
+he has basically a square around each one
+and he's seeing how many white pixels is in
+
+0:00:00.000,0:00:00.000
+this area.
+
+0:00:00.000,0:00:00.000
+So that allows you to detect movement in a
+certain position of the video.
+
+0:00:00.000,0:00:00.000
+So what he did is he attached a sounds to
+each note so you can play...
+
+0:00:00.000,0:00:00.000
+It's kind of fun.
+
+0:00:00.000,0:00:00.000
+I mean he's doing just that: how many white
+pixels are in that area, he also has a threshold
+
+0:00:00.000,0:00:00.000
+and that's it.
+
+0:00:00.000,0:00:00.000
+[laughter]
+
+0:00:00.000,0:00:00.000
+That's not too bad.
+
+0:00:00.000,0:00:00.000
+So there's a game application.
+
+0:00:00.000,0:00:00.000
+And then of course you, you know, can get
+creative.
+
+0:00:00.000,0:00:00.000
+You can imagine a website that's high on accesibility
+
+0:00:00.000,0:00:00.000
+for people that have trouble using the mouse
+or a keyboard
+
+0:00:00.000,0:00:00.000
+and if you need to interact with simple motion
+(left or right, up or down) you could, in
+
+0:00:00.000,0:00:00.000
+theory,
+
+0:00:00.000,0:00:00.000
+use the same technique and you can wave...
+
+0:00:00.000,0:00:00.000
+I mean, you can imagine on this presentation
+to scroll between slides
+
+0:00:00.000,0:00:00.000
+you can just do that and it should be able
+to know to slide left or right.
+
+0:00:00.000,0:00:00.000
+That, does it. Thank you very much!
+
+0:00:00.000,0:00:00.000
+This project that I started, I called it "Shaky
+Shake JS".
+
+0:00:00.000,0:00:00.000
+I'm still going to attempt to do some type
+of simple image stabilization.
+
+0:00:00.000,0:00:00.000
+It should be possible in theory with the example
+I was showing you.
+
+0:00:00.000,0:00:00.000
+Obviously it depends on a lot of things:
+
+0:00:00.000,0:00:00.000
+on what background you have,
+
+0:00:00.000,0:00:00.000
+how much movement you have aside from yourself,
+but it should be possible.
+
+0:00:00.000,0:00:00.000
+There's my info. I'm not very active on Twitter
+(I'm getting there), but I have been on Google
+
+0:00:00.000,0:00:00.000
+plus. Thank you.
+
+0:00:00.000,0:00:00.000
+[applause]
+
+0:00:00.000,0:00:00.000
+>> Patrick: Any questions?
+
+0:00:00.000,0:00:00.000
+>> Audience: The pictures you are taking with
+the camera, are still images? Or actual motion...
+
+0:00:00.000,0:00:00.000
+>> Paulo: That camera or this camera?
+
+0:00:00.000,0:00:00.000
+Oh, well, it's a video.
+
+0:00:00.000,0:00:00.000
+>> Audience: What type of compression are
+you using? Still image compression (jpeg)
+
+0:00:00.000,0:00:00.000
+or a motion jpeg, or H.264?
+
+0:00:00.000,0:00:00.000
+>> Paulo: Ok so I'll just repeat the question
+for those who didn't hear and for the video.
+
+0:00:00.000,0:00:00.000
+He's asking what type of compression, if any,
+that the video is doing that we're reading
+
+0:00:00.000,0:00:00.000
+- is that good more or less?
+
+0:00:00.000,0:00:00.000
+I'm not doing anything actually with the video.
+
+0:00:00.000,0:00:00.000
+Whatever image comes from the video DOM element,
+I'm painting that on to my canvas.
+
+0:00:00.000,0:00:00.000
+>> Audience: So you're just capturing still
+images?
+
+0:00:00.000,0:00:00.000
+>> Paulo: Yeah, yeah exactly. Yes effectively,
+correct. So every...
+
+0:00:00.000,0:00:00.000
+40 times a second, it's grabbing whatever
+is on the video image just as if I did a screenshot
+
+0:00:00.000,0:00:00.000
+essentially and it's painting that.
+
+0:00:00.000,0:00:00.000
+So if your video has a high...
+
+0:00:00.000,0:00:00.000
+ideally, you would want to match the same
+frame rate that the video is playing at.
+
+0:00:00.000,0:00:00.000
+I don't know the exact frame rate of my camera,
+but ideally in this example it would match
+
+0:00:00.000,0:00:00.000
+the exact thing.
+
+0:00:00.000,0:00:00.000
+You might have noticed that in those black
+and white images on the canvas there was a
+
+0:00:00.000,0:00:00.000
+little bit of a blink?
+
+0:00:00.000,0:00:00.000
+And that's because I'm actually capturing
+faster than the camera is spitting out.
+
+0:00:00.000,0:00:00.000
+So every once in a while it tries to grab
+an image that...
+
+0:00:00.000,0:00:00.000
+it turns black because it's the exact same
+that I already have from before.
+
+0:00:00.000,0:00:00.000
+Because it's going faster.
+
+0:00:00.000,0:00:00.000
+Ok.
+
+0:00:00.000,0:00:00.000
+>> Audience: How do you grab the video...
+the live video from the camera?
+
+0:00:00.000,0:00:00.000
+>> Paulo: Ok that was... well I'm already
+disconnected, but in the beginning umm...
+
+0:00:00.000,0:00:00.000
+I showed an example... the first code snippet
+which was a very small one,
+
+0:00:00.000,0:00:00.000
+in that loop that I have, the context (the
+canvas context)
+
+0:00:00.000,0:00:00.000
+has a function called which is called "drawImage"
+- I think that's what it is -
+
+0:00:00.000,0:00:00.000
+and you can pass in the video DOM element,
+and it does it for you.
+
+0:00:00.000,0:00:00.000
+So it grabs whatever is in the video element
+and paints it on to your canvas.
+
+0:00:00.000,0:00:00.000
+So there's actually no work there that I did.
+
+0:00:00.000,0:00:00.000
+>> Audience: I ask because I worked with the
+video tag, like 2 years ago and I think it
+
+0:00:00.000,0:00:00.000
+was probably under development back then or
+maybe I didn't research very well, and you
+
+0:00:00.000,0:00:00.000
+couldn't load live video to the video tag.
+Basically you could only load the [indistinct]
+
+0:00:00.000,0:00:00.000
+video.
+
+0:00:00.000,0:00:00.000
+>> Paulo: Ah, actually this is still under,
+or it's not a standard yet.
+
+0:00:00.000,0:00:00.000
+Well, it's already disconnect, but there's
+a "getMedia" ...
+
+0:00:00.000,0:00:00.000
+"getWeb..."
+
+0:00:00.000,0:00:00.000
+I forget what it is.
+
+0:00:00.000,0:00:00.000
+There's a function where you can do "win...
+navigator.getMediaElement" and that grabs
+
+0:00:00.000,0:00:00.000
+your webcam.
+
+0:00:00.000,0:00:00.000
+So here I'm actually using "webkitGetMedia..."
+
+0:00:00.000,0:00:00.000
+because all the browsers have their vendor-specific
+ones.
+
+0:00:00.000,0:00:00.000
+So yeah, it's still under... it's not standard
+yet, so [indistinct]
+
+0:00:00.000,0:00:00.000
+That example with the game, he... when he
+did that, he had to use Chrome Canary
+
+0:00:00.000,0:00:00.000
+because it was only available on that build.
+But right now it's in the distributed version.
+
+0:00:00.000,0:00:00.000
+I should probably stop now because I'm way
+over.
+
+0:00:00.000,0:00:00.000
+[applause]
+
