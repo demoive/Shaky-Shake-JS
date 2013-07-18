@@ -11,7 +11,7 @@
     height = video.height;
 
     // The target canvas.
-    var canvas = doc.getElementById('canvas-blended');
+    var canvas = doc.getElementById('canvas-diff');
     context = canvas.getContext('2d');
 
     // Prepare buffers to store lightness data.

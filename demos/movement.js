@@ -65,6 +65,7 @@
    */
   function frameLoop() {
     var srcFrameImageData,
+      movementPxCount,
       diffImageData = srcCtx.createImageData(canvasWidth, canvasHeight);
 
     // Draws the image data from the video source on to a canvas context.
@@ -78,7 +79,12 @@
       prevFrameImageData = srcFrameImageData;
     }
 
-    compareFrames(diffImageData, srcFrameImageData, prevFrameImageData);
+    movementPxCount = compareFrames(diffImageData, srcFrameImageData, prevFrameImageData);
+
+    // Only used for the movement gauge.
+    if (movementPxCount > MOVEMENT_THRESHOLD) {
+      gaugeVal = Math.round((movementPxCount / canvasArea) * 100);
+    }
 
     // Store the current frame's image data for the next iteration.
     prevFrameImageData = srcFrameImageData;
@@ -92,7 +98,7 @@
     // calling it more often than there are frames produces a "blink" effect
     // within the compared frames
     //frameLoopTimeout = requestAnimationFrame(frameLoop);
-    frameLoopTimeout = setTimeout(frameLoop, 1000 / 30);
+    frameLoopTimeout = setTimeout(frameLoop, 1000 / 40);
 
     return frameLoopTimeout;
   }
@@ -148,11 +154,6 @@
 
       // Advance to the next pixel (a set of rgba channels).
       i = (i + 4);
-    }
-
-    // Only used for the movement gauge.
-    if (diffPxCount > MOVEMENT_THRESHOLD) {
-      gaugeVal = Math.round((diffPxCount / canvasArea) * 100);
     }
 
     return diffPxCount;
