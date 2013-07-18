@@ -1,0 +1,724 @@
+[chatter]
+
+>> Paulo: Ok, hello.
+
+[chatter]
+
+>> Patrick: Can you all hear it?
+
+>> Paulo: So I guess I'll speak really close.
+
+So, hello everyone.
+
+Before I start, really quickly, we're recording this on that camera over there, but it only records in thirty-minute intervals, so I have a timer and if I can ask - when it goes off - someone just to re-click the button so that we can record it.
+
+Or I guess Patrick can do it as well.
+
+Alright, so I'm talking about motion detection in JavaScript... in the browser.
+
+Not this type of motion in the window but in a video so that would be a webcam stream or a video file.
+
+Alright, let's get into it.
+
+So just a little about myself:
+
+I was born in Brazil, but I grew up in California.
+
+I studied in Bilbao and then that prompted me to move to Barcelona, and I've been here for a little over five years.
+
+I'm an Information Architect at a company here called Waytostay (we do apartment rentals).
+
+I've been doing JavaScript development for about 10 years - more seriously in the past four or five.
+
+So I wanted to mention this: that I am not an expert in video or motion graphics.
+
+And I mention that not to undermine me, but to encourage you guys because this is about video and graphics and don't get intimidated if you don't know something.
+
+I got into this with this project that I did.
+
+We're also dealing the the canvas and I've never done too much work with the canvas - just to accompany the previous comment.
+
+Alright so, what I'm going to be talking about:
+
+The reason I put "Questions" first is because I like an interactive audience so if you guys have question or comments feel free to shout them out. Don't be rude, but just raise your hands or ask away and we'll interact like that.
+
+And that helps me know too if you guys are following along or if I'm boring you guys so don't be afraid.
+
+Ok, so first thing - I'll just do an overview.
+
+This project that I did is a pretty small project but it was something I wanted to challenge myself with to see if it was possible.
+
+Essentially it was to detect movement in a video as I've said.
+
+So there's going to be three... I'll go through 3 different steps that I did to get to that stage.
+
+And then finally to... the difference between detecting movement, by the way... I separated it out into "Detect Movement" (which is just random motion) and then "Detecting Motion" is detecting the direction of the motion.
+
+And then if we have time we'll just talk about some potential applications that this can be used for.
+
+And feel free to think - if you think of anything during the presentation, I'll ask if you guys have any additional suggestions.
+
+Ok, so on to "The Challenge."
+
+This is what I wanted to do: to perform real-time image stabilization in the browser.
+
+A quick foreshadow: I did not get to this. It's actually pretty difficult, and we'll talk about why.
+
+But that's what I set out to do.
+
+So, in order to be able to stabilize an image, you need to counteract the motion that's happening in the video.
+
+If that's not intuitive it will become so.
+
+So in order to do that, you need to determine the direction of the motion.
+
+But first you have to be able to detect if there is movement in the video.
+
+So I'm actually going to go through these three points but in reverse order cause I actually started with number 3 since it's the easiest.
+
+Uhh, for the sake of time, let's just ignore that little asterix.
+
+Ok, I wanted to show this.
+
+So this was the hope - this would be like the goal, the ultimate goal to be able to do.
+
+So this is in Adobe After Effects - which is a video editing program (quite sophisticated)
+
+and the way you can do image stabilization in here is you actually find a point that you want to track in your video, you track it (not in real-time),
+
+and what it does is it basically plots the points where that pixel or the area you defined, where it moved to.
+
+With that information, then when you actually compile the movie or process it,
+
+you can counteract the motion.
+
+So it would look something like this.
+
+So if that screen wasn't moving around, the image in the video would be moving around
+
+and that's what we want to prevent.
+
+So that's what I had in my head; that's what I was trying to do in JavaScript,
+
+um, so let's see where I got.
+
+Alright, the first thing we have to do is...
+
+with the video element, we don't have access to the pixel data, we don't have access to the frames.
+
+We have access to be able to pause, play, slow down, volume, things like that.
+
+So to get started, we have to put all the image data into the canvas cause that will allow us to manipulate and read the pixels.
+
+So the first step is to transfer the video to the canvas.
+
+Now this actually isn't too hard and there's a small code snippet here.
+
+You guys definitely won't be able to read that.
+
+Um, essentially we have a source video which is just the DOM element,
+
+we set up a canvas,
+
+setup the proper width and height to just be the same as the video
+
+and here's just a small function (it's a loop function that calls itself) and all we're doing...
+
+I know this is really difficult, let me zoom in.
+
+Alright, still pretty light but um - there's this function which is part of the context object which I'll talk a little bit about later - and all your doing is specifying the actual DOM element (which is just "document.getElementById");
+
+you just pass that, the starting coordinates (so top left in x y), and then how much of the image you want to draw
+
+[indistinct]
+
+And if you loop this, everytime you call it, it will draw the frame onto your canvas.
+
+And you might think this would generate a big overhead, but it's actually pretty performant so there's no problem there.
+
+This is calling itself at 40 frames per second.
+
+The reason for that is because I'm using my webcam which has a slower framerate than most videos.
+
+Typically we'd want 60fps.
+
+In this case, actually, sometimes I needed to lower it a little bit to 30 or even 20.
+
+No questions?
+
+Alright. So, hopefully the webcam will work ok... so...
+
+You guys can see me? Over there, not here.
+
+This is the video element - you can see I have the controls.
+
+I can pause it play again. That's the standard video element.
+
+And then what I have over there on the right is a canvas which is being drawn every,
+
+40 times a second. And you can see no problems with lag. 
+
+Alright...
+
+>> Audience: I have a question. Are you dropping frames or not to maintain the frame rate?
+
+>> Paulo: Dropping frames?
+
+>> Audience: Yeah.
+
+>> Paulo: I might be.
+
+So what's happening in that function that's calling itself, is it's calling itself 40 times a second. If that video is playing faster that that, I'm only capturing the frame rate that I'm repeating at.
+
+So I can bump that up, and actually people would recommend - people like Paul Irish who is a big advocate of it (at least the first time I heard of it anyway) - of using the...
+
+I drew a blank right now... the request... request frame rate... requestAnimationFrame, yeah that's it.
+
+And what that does is the browser determines how many times to call it, and it optimizes it for you. So it will give you the best that you can get basically.
+
+The reason I'm not using that is because since the webcam is definitely slower than 60fps,
+
+you get a flash effect going on because as you're trying to draw faster than the video is giving you,
+
+you get every once in a while a black frame because there's nothing to draw,
+
+so I did it manually calling a setTimeout.
+
+Does that answer the...? Good?
+
+>> Audience: Thank you.
+
+>> Paulo: Ok, so let's get in to a little bit...
+
+talking about the canvas element and how it does it's thing.
+
+So that thing I mentioned earlier (the context) that's actually how you interact with the canvas.
+
+This you can assume to be the actual canvas element in the DOM (document.getElementById),
+
+and you have to "getContext" of the canvas which is what we'll be working with.
+
+It's kind of out of scope so we don't need to talk about it too much.
+
+So once you have this context you can do interesting things with the data that's in them.
+
+We're going to be using these two functions - they were the only ones of the context that I use in this project.
+
+Which is "getImageData" - which does the following:
+
+So over here you can't see it well, but there is a square which is the whole canvas frame.
+
+And you can basically say: "give me all the data that starts at this coordinate (x and y) for this width and height.
+
+So that's that box.
+
+It's kind of self-explanatory, no? With the image?
+
+So what this will do is return an object that has data of the image in this area.
+
+So that's how you get it from an existing canvas.
+
+But you can also create one (with blank data) so that you can use it without having to draw it in the browser (which we actually do).
+
+Any questions about that? This is probably the most complex or technical part of this so...
+
+[laughter]
+
+Ok, so this "imageData" is the object I was talking about that is returned by that call.
+
+What it does - let me advance one more - so it actually returns an "imageData" object which has a property in it call "data" which is what we are actually going to use.
+
+So what this does (the .data) is an array containing all the pixel data for your imageData.
+
+It's a little bit counterintuitive and you can't see because I made it black here but that's an "a".
+
+So essentially it returns an array that for every pixel, it has four items in the array.
+
+They're sequential and they represent the sub-pixels of a pixel (all the different channels): red, green, blue and the alpha channel for every pixel.
+
+So that's pretty cool.
+
+So now we have... we can manipulate down to the pixel level of our image.
+
+So all sorts of possibilities open up.
+
+So just in this example (this visual example I have setup) this is a 4 by 3 grid 
+
+We got one, two, three, four going across and three down,
+
+so the length of the array is 48 cause we had to multple by four because of the differnt sub channels.
+
+Alright, more code.
+
+Alright, I'll try to talk through it cause I think it's going to be hard to see.
+
+Sooo, this is the same frameLoop function that we had before (that tiny one that was down here) I've just added some things.
+
+We create a blank image data
+
+out of a source context with the same width and height as our video frame.
+
+And we store that here temporarily. We're gonna store something in there that will be usable to visualize things later.
+
+Now, to be able to detect movement, you need to be able to compare at least two frames, right?
+
+If you take a picture on a [still] camera, there's no real movement there so you need at least two frames.
+
+So over here we're going to be comparing the previous (from the previous iteration) and the current one.
+
+So this if statement is only used for the first iteration where we don't have a previous frame.
+
+Then we have this special function here which is on the next slide
+
+where we pass in this blank image data object
+
+and then the current and previous frames.
+
+Now let's go see what is happening there.
+
+And that other stuff is just to repeat the loop.
+
+Ok so this is the "compareFrames" function.
+
+So I'm passing in the imageData object of the current and previous frame.
+
+I do ".data" on them so that we get the actual array that I want to check
+
+and I start my loop.
+
+So I have a loop that's looping through every single pixel in my imageData frame.
+
+Now if you remember, this is going to iterate through every single sub-pixel
+
+which we don't actually need to do,
+
+so my increment down at the bottom does a "plus four"
+
+so then I can advance to the next actual pixel instead of sub-pixel.
+
+So inside this loop,
+
+there's a function here called "luma" which is calculating the lumniosity of the pixel.
+
+So, this is also going to start getting ahead of us, but:
+
+when you have a color image as we have an rgb channel,
+
+if you want to convert it to black and white
+
+all you care about is the brightness of each sub-pixel.
+
+So "is there a lot of red?" if there's "few green" or "a lot of blue."
+
+So the way you calculate the lumninosity of it is you average the three pixels.
+
+So here I'm passing in the "r" (which is the red channel) then the next one (so plus 1)
+
+which would be the green and then the blue.
+
+So now down here is the luma function (I know you can't see it) all it's doing is adding "r + g + b" and dividing by three.
+
+And by the way, "rgb" has a value between 0 and 255 just like when you set a color in CSS - it can have that range.
+
+Alright, so this is going to return... so now...
+
+this represents the gray scale value of the pixel that we're currently on - for the current and previous frame.
+
+And now I do a difference between them - subtract each other, absolute value - so now I have how much brightness changed on the current pixel that I have.
+
+You can start seeing how we're getting to detecting if there is a difference between a previous and a current frame that are stacked on top of each other.
+
+Yeah?
+
+Ok, umm...
+
+this is kind of an interesting part as well:
+
+I set a "threshold"
+
+(which I think I did up on top)
+
+threshold set to 20 (so that's in the value range: 0-255)...
+
+so you can play with this and it will basically be the threshold of whether the brightness difference was big enough to actually consider movement.
+
+And we'll actually be able to play with that in another example.
+
+So in...
+
+what this allows you to do is if it's above the threshold set the pixel to white because then it's easier to see if you're trying to visualize it.
+
+If not, set it to black.
+
+And then we do a count if this happens because we want to know how many of these "diffPixels" (as I call it)
+
+how many of these "diffPixels" happened throughout the frame.
+
+Ok, and then I write this value (255 or 0) out to my reference imageData object that I craeated earlier and passed into the function.
+
+I basically write "full value" (255) to all the channels (r, g, and b) and that will produce white.
+
+Alright, thanks for going through that. I know it's really dark and
+
+you probably didn't see as much as you should have.
+
+Ok so now we're going to detect movement.
+
+So what's going on here?
+
+I have the video element as before.
+
+But my canvas element, as you can see,
+
+it's not drawing the image,
+
+it's drawing the difference of the pixels data.
+
+So that little blue bar that's moving there,
+
+all that's showing... is representing the number of white pixels that you see on that canvas. K?
+
+So that loop that I was doing is basically going through every single pixel, every frame (and this is 40 times a seconds times all the pixels in the image).
+
+So yes, my fan does start going after a while.
+
+But, that's pretty neat.
+
+So if I stand totally still, it goes black.
+
+And if I start moving, you can see the difference. If I move real fast, the blue bar jumps up.
+
+Pretty nice.
+
+And then this slider that I setup is bound to the threshold value.
+
+So if I turn it down it becomes less sensative.
+
+See I'm moving? There are fewer white pixels.
+
+If I bump it up all the way, it whites out because there's always "less than or equal to 0" difference between the pixels.
+
+So, there - I'm keeping it pretty high
+
+and we can see the actual noise from the image because it's a shitty camera
+
+[laughter]
+
+and because we're in a basement so there's not a lot of light.
+
+Ok, now this checkbox,
+
+what this does is it enables or disables that condition where I had to force it to be white or black.
+
+If I turn that off...
+
+let me turn the sensitivity up a bit...
+
+actually that won't make too much of a difference.
+
+So now you see something different. Now you're actually seeing the...
+
+I just got my reminder to... ah, you did? Terrific, thanks. I'll start it again...
+
+Ok so, I turned off the "binary diff" so now we're actually seeing the luminosity difference of the pixels.
+
+Just kind of fun.
+
+The other is much more useful because we just care about how many of those pixels we consider to be a "motion pixel".
+
+Alright, that's it for that demo.
+
+Good so far still?
+
+You can hear me ok?
+
+How are we doing on time?
+
+Ok, I'm going to skip this section.
+
+What I was going to do is, in Photoshop, you can setup different layers and it's a good way to be able to visualize and interact with what's happening in the code we just setup.
+
+Photoshop let's you setup different layers and
+
+it allows you to blend those in several different ways.
+
+And one of them is called "Difference"
+
+and what it does is essentially the exact same thing:
+
+it does a difference between the pixels and if there is a difference,
+
+it will show it in white and if not in black.
+
+So I'll skip that because I think you guys got that.
+
+Ok, let's get into this because this is the final part.
+
+So now to be able to detect the actual direction of the motion.
+
+So we've been able to detect movement,
+
+does anyone have any ideas of how we might detect the direction of the movement?
+
+Maybe.
+
+Ok, I'll give you five seconds...
+
+Well, let's walk through it.
+
+So this is my solution, there might be others,
+
+but this is the simplest I could think of.
+
+First we get the number of pixels (like we were doing with that blue bar)
+
+So the number of [white] pixels in the current difference frame.
+
+So now we have a number value.
+
+What I decided to do is,
+
+imagine I have two layers,
+
+this is the current and this is the previous.
+
+So in the same iteration loop,
+
+before I move on to the next,
+
+I shift the prvious frame a little bit - I did it by three pixels.
+
+So now with the shift,
+
+I get the number of pixels again
+
+(do the same diff I did before)
+
+and if there are fewer pixels from the previous one
+
+I know the direction of the movement happened in the same way that I moved my difference frame.
+
+This is actually where the Photoshop example might of come in handy.
+
+Are there any doubts about that?
+
+It's a little hard to visualize without a reference.
+
+Ok. And else, the movement happened in the other direction.
+
+I mean, that's really simplistic, but we're we're also not going for a high level of detection.
+
+And then you can repeat that for the other axis (the y axis)
+
+to be able to detection motion up and down cause this will only detect it on one axis (the x axis).
+
+Ok let's get a demo and if there are any doubts, this should clear them up.
+
+Ok, so we basically have the same setup here,
+
+the video on the left,
+
+but the difference that we're seeing now in the canvas (in black and white)...
+
+you'll notice that if I stand still,
+
+there's still a diffrence
+
+and the reason is because what I'm showing here in this canvas is the comparison of the shifted previous frame.
+
+So all the white that's showing there is 3 pixels to the left
+
+(or right, I forgot which one it is)
+
+of the difference.
+
+So now the blue bar is still showing the same data.
+
+So if I stand still it shows how many white pixels are in there.
+
+But if I move, let's see,
+
+if I move this way
+
+you still have white pixels.
+
+You can see the blue bar moving to the right because I'm basically increasing the number of pixels on the thing.
+
+But if I move it in the other direction, you'll notice my hand kind of goes black.
+
+And that's because I'm catching up to the shift that I did with the previous frame.
+
+And it actually works, if you look at the blue bar and I move my body, you'll notice it goes down.
+
+And if I move over to the right, it goes up.
+
+So right there, I've detected direction on one of the axis.
+
+So that's pretty... not too bad.
+
+And I did it all on my own!
+
+[laughter]
+
+And I think we're out of time, so...
+
+maybe we'll skip this part.
+
+Just some potential applications that we can use this for.
+
+I guess we'll count this as part of the "Questions" segment at the end.
+
+So anyone with any possible suggestions?
+
+I'll go over my list and maybe that will give you ideas.
+
+That one doesn't actually apply to motion so I'll skip it.
+
+It's just other things that you can do with the pixel data on the canvas.
+
+I should show this because it is a nice game that someone setup
+
+using the exact same concept...
+
+which is pretty neat.
+
+So what this guy did,
+
+is he setup a similar thing (you can see on the bottom right there it's showing the difference pixels).
+
+But what he does is up here where there are symbols,
+
+he has basically a square around each one and he's seeing how many white pixels is in this area.
+
+So that allows you to detect movement in a certain position of the video.
+
+So what he did is he attached a sounds to each note so you can play...
+
+It's kind of fun.
+
+I mean he's doing just that: how many white pixels are in that area, he also has a threshold and that's it.
+
+[laughter]
+
+That's not too bad.
+
+So there's a game application.
+
+And then of course you, you know, can get creative.
+
+You can imagine a website that's high on accesibility
+
+for people that have trouble using the mouse or a keyboard
+
+and if you need to interact with simple motion (left or right, up or down) you could, in theory,
+
+use the same technique and you can wave...
+
+I mean, you can imagine on this presentation to scroll between slides
+
+you can just do that and it should be able to know to slide left or right.
+
+That, does it. Thank you very much!
+
+
+
+
+This project that I started, I called it "Shaky Shake JS".
+
+I'm still going to attempt to do some type of simple image stabilization.
+
+It should be possible in theory with the example I was showing you.
+
+Obviously it depends on a lot of things:
+
+on what background you have,
+
+how much movement you have aside from yourself, but it should be possible.
+
+There's my info. I'm not very active on Twitter (I'm getting there), but I have been on Google plus. Thank you.
+
+[applause]
+
+>> Patrick: Any questions?
+
+>> Audience: The pictures you are taking with the camera, are still images? Or actual motion...
+
+>> Paulo: That camera or this camera?
+
+Oh, well, it's a video.
+
+>> Audience: What type of compression are you using? Still image compression (jpeg) or a motion jpeg, or H.264?
+
+>> Paulo: Ok so I'll just repeat the question for those who didn't hear and for the video.
+
+He's asking what type of compression, if any, that the video is doing that we're reading - is that good more or less?
+
+I'm not doing anything actually with the video.
+
+Whatever image comes from the video DOM element, I'm painting that on to my canvas. 
+
+>> Audience: So you're just capturing still images?
+
+>> Paulo: Yeah, yeah exactly. Yes effectively, correct. So every...
+
+40 times a second, it's grabbing whatever is on the video image just as if I did a screenshot essentially and it's painting that.
+
+So if your video has a high...
+
+ideally, you would want to match the same frame rate that the video is playing at.
+
+I don't know the exact frame rate of my camera, but ideally in this example it would match the exact thing.
+
+You might have noticed that in those black and white images on the canvas there was a little bit of a blink?
+
+And that's because I'm actually capturing faster than the camera is spitting out.
+
+So every once in a while it tries to grab an image that...
+
+it turns black because it's the exact same that I already have from before.
+
+Because it's going faster.
+
+Ok.
+
+>> Audience: How do you grab the video... the live video from the camera?
+
+>> Paulo: Ok that was... well I'm already disconnected, but in the beginning umm...
+
+I showed an example... the first code snippet which was a very small one,
+
+in that loop that I have, the context (the canvas context)
+
+has a function called which is called "drawImage" - I think that's what it is -
+
+and you can pass in the video DOM element, and it does it for you.
+
+So it grabs whatever is in the video element and paints it on to your canvas.
+
+So there's actually no work there that I did. 
+
+>> Audience: I ask because I worked with the video tag, like 2 years ago and I think it was probably under development back then or maybe I didn't research very well, and you couldn't load live video to the video tag. Basically you could only load the [indistinct] video.
+
+>> Paulo: Ah, actually this is still under, or it's not a standard yet.
+
+Well, it's already disconnect, but there's a "getMedia" ...
+
+"getWeb..."
+
+I forget what it is.
+
+There's a function where you can do "win... navigator.getMediaElement" and that grabs your webcam.
+
+So here I'm actually using "webkitGetMedia..."
+
+because all the browsers have their vendor-specific ones.
+
+So yeah, it's still under... it's not standard yet, so [indistinct]
+
+That example with the game, he... when he did that, he had to use Chrome Canary
+
+because it was only available on that build. But right now it's in the distributed version.
+
+I should probably stop now because I'm way over.
+
+[applause]

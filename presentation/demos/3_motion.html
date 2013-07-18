@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Demo 3 - Movement</title>
+    <style>
+      body { font-family: sans-serif; }
+      video, canvas, aside { float: left; margin: 10px; }
+      canvas { border: 1px solid red; background-color: #ccc; }
+      #motion-direction { height: 10px; background-color: blue; }
+    </style>
+  </head>
+
+  <body>
+    <video id="video-src" width="320" height="240" controls muted autoplay></video>
+    <aside>
+      <div id="motion-direction"></div>
+      Sensitivity: <input id="diff-threshold" type="range" min="50" max="100" value="95" title="Sensitivity"><br>
+      <input id="binary-diff" type="checkbox" checked> Show binary diff
+    </aside>
+
+    <script src="3_motion.js"></script>
+  </body>
+</html>
